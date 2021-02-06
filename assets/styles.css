@@ -1,0 +1,334 @@
+.js-plotly-plot .plotly .modebar {
+  padding-top: 5%;
+  margin-right: 3.5%;
+}
+
+body {
+  background-color: #192229;
+  margin: 5%;
+  margin-top:0px;
+  margin-left: 0px;
+  margin-right: 0px;
+}
+
+.two.columns {
+  width: 16.25%;
+}
+
+.column,
+.columns {
+  /*margin-left: 0.5%;*/
+}
+
+.pretty_container {
+  border-radius: 5px;
+  background-color: #212E36;
+  margin: 10px;
+  padding: 15px;
+  position: relative;
+  /*box-shadow: 2px 2px 2px 2px #2A3B47;*/
+
+
+}
+
+.bare_container {
+  margin: 0 0 0 0;
+  padding: 0 0 0 0;
+}
+
+.dcc_control {
+  margin: 0px;
+  padding: 5px;
+  width: calc(100%-40px);
+
+}
+
+.control_label {
+  margin: 0;
+  padding: 10px;
+  padding-bottom: 0px;
+  margin-bottom: 0px;
+  width: calc(100%-40px);
+}
+
+.rc-slider {
+  margin-left: 0px;
+  padding-left: 0px;
+}
+
+.flex-display {
+  display: flex;
+}
+
+.container-display {
+  display: flex;
+}
+
+#coste_bars_graph,
+#aggregate_graph {
+  width: calc(100% - 30px);
+  position: absolute;
+}
+
+#percentil_graph {
+  position: absolute;
+  height: calc(100% - 30px);
+  width: calc(100% - 30px);
+}
+
+#countGraphContainer {
+  flex: 5;
+  position: relative;
+}
+
+#header {
+  align-items: center;
+  justify-content: space-evenly;
+}
+
+
+#learn-more-button {
+  text-align: center;
+  /*! height: 10%; */
+  padding: 0;
+  text-transform: none;
+  font-size: 2.2rem;
+  float: right;
+  /*! margin: 10px; */
+  border-color: #2A3B47;
+  padding-bottom: 0px;
+  padding-top: 0px;
+  border: 0px;
+}
+#title {
+  text-align: center;
+}
+
+.mini_container {
+  border-radius: 5px;
+  background-color: #212E36;
+  margin: 10px;
+  padding: 15px;
+  position: relative;
+  /*box-shadow: 2px 2px 2px 2px #2A3B47;*/
+
+}
+
+#right-column {
+  display: flex;
+  flex-direction: column;
+}
+
+#wells {
+  flex: 1;
+}
+
+#gas {
+  flex: 1;
+}
+
+#aggregate_data {
+  align-items: center;
+}
+
+#oil {
+  flex: 1;
+}
+
+#water {
+  flex: 1;
+}
+
+#tripleContainer {
+  display: flex;
+  flex: 3;
+}
+
+#mainContainer {
+  display: flex;
+  flex-direction: column;
+}
+
+#pie_graph > div > div > svg:nth-child(3) > g.infolayer > g.legend {
+  pointer-events: all;
+  transform: translate(30px, 349px);
+}
+
+
+#map_graph {
+  position: absolute;
+  height: calc(100% - 30px);
+  width: calc(100% - 30px);
+}
+
+#box_graph {
+  position: absolute;
+  height: calc(100% - 30px);
+  width: calc(100% - 30px);
+}
+
+td.CalendarDay {
+  padding: 0;
+}
+
+/*.Select--multi .Select-multi-value-wrapper,
+.Select-arrow {
+ display:inline-block;
+ background-color: #000000
+}
+
+/* Graph Control Objects ––––––––––––––––––––––––––––––––––––––––––––––––––*/
+.div-user-controls {
+  padding-left: 55px;
+  padding-top: 64px;
+}
+.div-for-dropdown {
+  padding-top: 12px;
+  padding-bottom: 12px;
+}
+.div-for-slider {
+  width: 97%;
+  text-align: center;
+}
+.logo {
+  height: 35px;
+  padding-bottom: 12px;
+  margin-left: 8px;
+}
+.Select-control, .Select-menu-outer, .Select-multi-value-wrapper, .select-up, .is-open .Select-control {
+  background-color: #0E1418;
+  color: white;
+
+}
+
+#bar-selector .Select-multi-value-wrapper{
+  max-height: 82px;
+  overflow-y: auto;
+  margin: 0px 0px -3px 0px;
+}
+
+.Select-control{
+  border: 0.5px solid #dbdbdb44;
+}
+
+.has-value.Select--single>.Select-control .Select-value .Select-value-label, .has-value.is-pseudo-focused.Select--single>.Select-control .Select-value .Select-value-label {
+  color: white;
+}
+._dash-app-content {
+  overflow-x: hidden;
+  overflow-y: hidden;
+  position: relative;
+}
+.has-value.Select--single>.Select-control .Select-value .Select-value-label, .has-value.is-pseudo-focused.Select--single>.Select-control .Select-value .Select-value-label{
+  color: #d8d8d8;
+  font-weight: 400;
+  font-size: 14px;
+}
+
+
+#date {
+  background-color: #1e1e1e;
+  font-family: "Open Sans";
+  font-weight: 400;
+  color: #dbdbdb;
+  border: 0.5px solid #dbdbdb44;
+}
+
+#date-picker-select{
+  width: 100%;
+}
+
+._dash-undo-redo {
+  display: none;
+}
+.DateInput.DateInput_1{
+  width: 100%;
+}
+.SingleDatePickerInput__withBorder{
+  border:none;
+}
+
+.DateInput.DateInput_1 {
+  background-color: #1e1e1e;
+}
+
+.SingleDatePickerInput__withBorder {
+  border-radius: 3px;
+  color: #dbdbdb;
+  background: #0E1418;
+  background-color: #0E1418;
+}
+.SingleDatePickerInput.SingleDatePickerInput_1.SingleDatePickerInput__withBorder.SingleDatePickerInput__withBorder_2 {
+  border: 0.0px solid #192229;
+  display: block;
+}
+.SingleDatePicker_1 {
+  border: 0.0px solid #192229;
+  display: block;
+}
+
+.SingleDatePicker_picker, .SingleDatePicker_picker_1, .SingleDatePicker_picker__directionLeft,
+.SingleDatePicker_picker__directionLeft_2{
+  filter:invert(100%);
+}
+
+.Select--multi .Select-value {
+ background-color:#ebf5ff;
+ background-color:rgba(0,126,255,.08);
+ border-radius:2px;
+ border:1px solid #c2e0ff;
+ border:1px solid rgba(0,126,255,.24);
+ color:#ededed;
+ display:inline-block;
+ font-size:.9em;
+ line-height:1.4;
+ margin-left:5px;
+ margin-top:5px;
+ vertical-align:top
+}
+
+.DateRangePickerInput {
+  background-color: #0E1418;
+  display: inline-block
+}
+
+.DateRangePickerInput__withBorder {
+  border-radius: 1px;
+  border: 0.5px solid #0E1418;
+}
+
+.DateInput_input {
+  font-weight: 200;
+  font-size: 19px;
+  line-height: 24px;
+  color: #ededed;
+  background-color: #fff;
+  width: 100%;
+  padding: 11px 11px 9px;
+  border: 0;
+  border-top: 0;
+  border-right: 0;
+  border-bottom: 2px solid transparent;
+  border-left: 0;
+  border-radius: 0
+}
+
+.DateRangePickerInput_arrow_svg {
+  vertical-align: middle;
+  fill: #b2b2b2;
+  height: 24px;
+  width: 24px
+}
+
+.DateRangePickerInput_clearDates_svg {
+  fill: #b2b2b2;
+  height: 12px;
+  width: 15px;
+  vertical-align: middle
+}
+
+.DateRangePickerInput_clearDates_default:focus,
+.DateRangePickerInput_clearDates_default:hover {
+  background: #212E36;
+  border-radius: 90%
+}
