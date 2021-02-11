@@ -55,7 +55,7 @@ if __name__ == "__main__":
 
     df['Tweet_Content_Token'] = df['Tweet_Content'].apply(word_cloud.spacy_tokenizer)
 
-    df_yest=pd.read_parquet('./data/df.parquet')
+    df_yest=pd.read_parquet('./data/df_total.parquet')
 
     df_total = pd.concat([df_yest , df] , axis=0)
 
