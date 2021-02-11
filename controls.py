@@ -2,7 +2,7 @@ import pandas as pd
 
 
 
-df=pd.read_parquet('./data/df.parquet')
+df=pd.read_parquet('./data/df_total.parquet')
 
 
 ########### controls
