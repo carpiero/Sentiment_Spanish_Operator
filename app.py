@@ -30,7 +30,7 @@ tomorrow = today + datetime.timedelta(days=1)
 warnings.filterwarnings('ignore')
 
 #####   controls
-from controls import df, GRUPO_dict, USER_dict
+from controls import df, GRUPO_dict, USER_dict, df_f
 
 
 ############# RUN APP
@@ -243,7 +243,7 @@ app.layout = html.Div(
                             className="row container-display",
                         ),
                         html.Div(
-                            [dcc.Graph(id="percentil_graph",config = {'displayModeBar': False})],
+                            [dcc.Graph(id="stars_graph",config = {'displayModeBar': False})],
                             id="countGraphContainer",
                             className="pretty_container",style={'min-height': '280px'},
                         ),
@@ -292,7 +292,7 @@ app.layout = html.Div(
 app.clientside_callback(
     ClientsideFunction(namespace="clientside", function_name="resize"),
     Output("output-clientside", "children"),
-    [Input("percentil_graph", "figure")],
+    [Input("stars_graph", "figure")],
 )
 
 
@@ -384,17 +384,37 @@ def update_text(GRUPO_types, USER_types,start_date , end_date ):
 
 
 
-################   percentil_graph graph
+################   stars_graph graph
 
 @app.callback(
-    Output("percentil_graph", "figure"),
+    Output("stars_graph", "figure"),
     [
-        Input("GRUPO_types" , "value") , Input("USER_types" , "value") , Input("municipio_types" , "value") ,
-        Input("partida_de_coste_types" , "value")
-    ],[State("wordcloud", "relayoutData")]
+        Input("GRUPO_types" , "value") , Input("USER_types" , "value") , Input("date_picker_select" , 'start_date') ,
+        Input("date_picker_select" , 'end_date'),
+            ],[State("wordcloud", "relayoutData")]
     # [State("lock_selector", "value"), State("wordcloud", "relayoutData")],
 )
-def make_percentil_graph_figure(GRUPO_types, USER_types,municipio_types,partida_de_coste_types, wordcloud):
+def make_stars_graph_figure(GRUPO_types, USER_types,start_date , end_date, wordcloud):
+
+    df_f = df_f.loc[(df_f['username'].isin(USER_types)) & (df_f['created_at'] >= start_date) & (
+            df_f['created_at'] < end_date) ,]
+
+    df_f = df_f.pivot_table(index=['username','orden'],values=['stars']).sort_values(by='orden' ,ascending=True).reset_index()
+
+
+
+    fig = go.Figure()
+    fig.add_trace(go.Bar(x=df1['CCAA'] , y=df1['PC_TOTAL'] , name='Percentil 90' , marker_color='#D62728'))
+    fig.add_trace(go.Bar(x=df2['CCAA'] , y=df2['PC_TOTAL'] , name='Percentil 75' , marker_color='#3366CC'))
+    fig.add_trace(go.Bar(x=df3['CCAA'] , y=df3['PC_TOTAL'] , name='Percentil 25' , marker_color='#2CA02C'))
+    fig.add_trace(go.Bar(x=df4['CCAA'] , y=df4['PC_TOTAL'] , name='Mediana' , marker_color='rgb(217, 95, 2)'))
+
+    fig.update_layout(title=f'Coste por habitante Total, Comunidades Autónomas')
+
+
+
+
+
     if partida_de_coste_types == 'TODOS':
         if GRUPO_types == 'TODAS' and USER_types == 'TODAS' and municipio_types == 'TODOS':
             df = df_count_cn
