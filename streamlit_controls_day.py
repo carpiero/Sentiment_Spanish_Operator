@@ -32,6 +32,21 @@ if __name__ == "__main__":
 
     df=df.loc[(df['created_at'] >= start_date) & (df['created_at'] < end_date)]
 
+    df['Year'] = pd.DatetimeIndex(df['created_at']).year
+    df['Month'] = pd.DatetimeIndex(df['created_at']).month
+    df['Day'] = pd.DatetimeIndex(df['created_at']).day
+
+    df = df.loc[~df['Tweet_Content'].str.contains(
+            'viernestopenmasmovil|s o r t e o|realmadrid|colorweek|taehyung|sorteo|concurso|concursazo|sorteazo|regalamos|cumplelowiconlg|laliga|concierto|cestavodafone|Movistar Liga de Campeones' ,
+            case=False)]
+
+    df['Tweet_Content_Token'] = df['Tweet_Content'].apply(word_cloud.spacy_tokenizer)
+
+    df_yest=pd.read_parquet('./data/df.parquet')
+    # df_yest=pd.read_parquet('./data/df_total.parquet')
+
+    df_total = pd.concat([df_yest , df] , axis=0)
+
     feature_types = {
         'name': 'category' ,
         'user_id': 'category' ,
@@ -43,21 +58,8 @@ if __name__ == "__main__":
         'GRUPO': 'category' ,
     }
     for feature , dtype in feature_types.items():
-        df.loc[: , feature] = df[feature].astype(dtype)
+        df_total.loc[: , feature] = df_total[feature].astype(dtype)
 
-    df['Year'] = pd.DatetimeIndex(df['created_at']).year
-    df['Month'] = pd.DatetimeIndex(df['created_at']).month
-    df['Day'] = pd.DatetimeIndex(df['created_at']).day
-
-    df = df.loc[~df['Tweet_Content'].str.contains(
-            'viernestopenmasmovil|s o r t e o|realmadrid|colorweek|taehyung|sorteo|concurso|sorteazo|regalamos|cumplelowiconlg|laliga|concierto|cestavodafone|Movistar Liga de Campeones' ,
-            case=False)]
-
-    df['Tweet_Content_Token'] = df['Tweet_Content'].apply(word_cloud.spacy_tokenizer)
-
-    df_yest=pd.read_parquet('./data/df_total.parquet')
-
-    df_total = pd.concat([df_yest , df] , axis=0)
 
     df_total.to_parquet('./data/df_total.parquet')
     print('\n\nFinish')
