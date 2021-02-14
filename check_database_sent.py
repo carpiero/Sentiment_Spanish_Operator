@@ -43,7 +43,7 @@ if __name__ == "__main__":
 
     stars2=df_postgresql.pivot_table(index=['username'] , columns=['Year','Month' , 'Day'] , values=['stars']).iloc[: , -1:]
 
-    print(f'\n\n{stars2}')
+    print(f'\n\n{stars2}\n\n')
 
     today = datetime.date.today()
     yest = today - datetime.timedelta(days=1)
