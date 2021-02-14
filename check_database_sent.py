@@ -44,3 +44,16 @@ if __name__ == "__main__":
     stars2=df_postgresql.pivot_table(index=['username'] , columns=['Year','Month' , 'Day'] , values=['stars']).iloc[: , -1:]
 
     print(f'\n\n{stars2}')
+
+    today = datetime.date.today()
+    yest = today - datetime.timedelta(days=1)
+
+    today2 = pd.to_datetime(today)
+    yest2 = pd.to_datetime(yest)
+
+    start_date = yest2
+    end_date = today2
+
+    df = df_postgresql.loc[(df['created_at'] >= start_date) & (df_postgresql['created_at'] < end_date)]
+
+    print(df['username'].value_counts())
