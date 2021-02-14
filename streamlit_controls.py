@@ -4,6 +4,7 @@ from sqlalchemy import create_engine
 import configparser
 import psycopg2
 from wrangling import word_cloud
+import collections
 
 if __name__ == "__main__":
 ########## carga de database
@@ -13,10 +14,10 @@ if __name__ == "__main__":
 
     user = cfg['ssh']['username']
     passw = cfg['ssh']['password']
-    engine = create_engine(f'postgresql://{user}:{passw}@192.168.1.170/carpiero' , echo=True)
-    # engine = create_engine(f'postgresql://{user}:{passw}@asuscar.duckdns.org/carpiero' , echo=True)
+    engine = create_engine(f'postgresql://{user}:{passw}@192.168.1.170/carpiero' )
+    # engine = create_engine(f'postgresql://{user}:{passw}@asuscar.duckdns.org/carpiero')
 
-    # engine = create_engine(f'postgresql://{user}:{passw}@localhost/carpiero' , echo=True)
+    # engine = create_engine(f'postgresql://{user}:{passw}@localhost/carpiero')
     sqlite_connection = engine.connect()
 
     df_postgresql = pd.read_sql_query("SELECT * FROM twitter_operators_sent_02" , engine , coerce_float=True ,parse_dates=['created_at'])
@@ -45,7 +46,28 @@ if __name__ == "__main__":
     df['Tweet_Content_Token'] = df['Tweet_Content'].apply(word_cloud.spacy_tokenizer)
 
     df.to_parquet('./data/df.parquet')
-    print('\n\nFinish')
+    print('\n\nFinish\n\n')
+
+    today = datetime.date.today()
+    yest = today - datetime.timedelta(days=1)
+    first = today.replace(day=1)
+    lastMonth = first - datetime.timedelta(days=1)
+    tomorrow = today + datetime.timedelta(days=1)
+
+    today2=pd.to_datetime(today)
+    yest2=pd.to_datetime(yest)
+
+    start_date = yest2
+    end_date = today2
+
+    df_f = df.loc[(df['created_at'] >= start_date) & (df['created_at'] < end_date)]
+
+    counts_nsw = collections.Counter([text for i in df_f['Tweet_Content_Token'] for text in i])
+    sorted_keys = sorted(counts_nsw, key=counts_nsw.get, reverse=True)
+
+    for p,i in enumerate(sorted_keys):
+        if p < 7:
+            print(f'{i} : {counts_nsw[i]}')
 
 
 

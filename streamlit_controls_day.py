@@ -4,6 +4,7 @@ from sqlalchemy import create_engine
 import configparser
 import psycopg2
 from wrangling import word_cloud
+import collections
 
 if __name__ == "__main__":
 ########## carga de database
@@ -13,10 +14,10 @@ if __name__ == "__main__":
 
     user = cfg['ssh']['username']
     passw = cfg['ssh']['password']
-    engine = create_engine(f'postgresql://{user}:{passw}@192.168.1.170/carpiero' , echo=True)
-    # engine = create_engine(f'postgresql://{user}:{passw}@asuscar.duckdns.org/carpiero' , echo=True)
+    engine = create_engine(f'postgresql://{user}:{passw}@192.168.1.170/carpiero' )
+    # engine = create_engine(f'postgresql://{user}:{passw}@asuscar.duckdns.org/carpiero' )
 
-    # engine = create_engine(f'postgresql://{user}:{passw}@localhost/carpiero' , echo=True)
+    # engine = create_engine(f'postgresql://{user}:{passw}@localhost/carpiero' )
     sqlite_connection = engine.connect()
 
     df = pd.read_sql_query("SELECT * FROM twitter_operators_sent_02" , engine , coerce_float=True ,parse_dates=['created_at'])
@@ -41,6 +42,14 @@ if __name__ == "__main__":
             case=False)]
 
     df['Tweet_Content_Token'] = df['Tweet_Content'].apply(word_cloud.spacy_tokenizer)
+
+    counts_nsw = collections.Counter([text for i in df['Tweet_Content_Token'] for text in i])
+
+    sorted_keys = sorted(counts_nsw, key=counts_nsw.get, reverse=True)
+
+    for p,i in enumerate(sorted_keys):
+        if p < 7:
+            print(i,':', counts_nsw[i])
 
     df_yest=pd.read_parquet('./data/df.parquet')
     # df_yest=pd.read_parquet('./data/df_total.parquet')
