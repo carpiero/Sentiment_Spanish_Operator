@@ -403,37 +403,10 @@ def make_stars_graph_figure(GRUPO_types, USER_types,start_date , end_date, wordc
     df_stars['stars'] = round(df_stars['stars'] ,2 )
 
     colors = df_stars['color'].to_list()
-    # df0 =  df_stars.iloc[[0]]
-    # df1 =  df_stars.iloc[[1]]
-    # df2 =  df_stars.iloc[[2]]
-    # df3 =  df_stars.iloc[[3]]
-    # df4 =  df_stars.iloc[[4]]
-    # df5 =  df_stars.iloc[[5]]
-    # df6 =  df_stars.iloc[[6]]
-    # df7 =  df_stars.iloc[[7]]
-    # df8 =  df_stars.iloc[[8]]
-    # df9 =  df_stars.iloc[[9]]
-    # df10 =  df_stars.iloc[[10]]
-    # df11 =  df_stars.iloc[[11]]
-    # df12 =  df_stars.iloc[[12]]
-
 
     fig = go.Figure()
 
     fig.add_trace(go.Bar(x=df_stars['username'] , y=df_stars['stars'] , name='Masmovil' , marker_color=colors))
-    # fig.add_trace(go.Bar(x=df1['username'] , y=df1['stars'] , name='Masmovil' , marker_color='#D62728'))
-    # fig.add_trace(go.Bar(x=df2['username'] , y=df2['stars'] , name='Masmovil' , marker_color='#D62728'))
-    # fig.add_trace(go.Bar(x=df3['username'] , y=df3['stars'] , name='Masmovil' , marker_color='#D62728'))
-    # fig.add_trace(go.Bar(x=df4['username'] , y=df4['stars'] , name='Masmovil' , marker_color='#D62728'))
-    # fig.add_trace(go.Bar(x=df5['username'] , y=df5['stars'] , name='Masmovil' , marker_color='#D62728'))
-    # fig.add_trace(go.Bar(x=df6['username'] , y=df6['stars'] , name='Masmovil' , marker_color='#D62728'))
-    # fig.add_trace(go.Bar(x=df7['username'] , y=df7['stars'] , name='Masmovil' , marker_color='#D62728'))
-    # fig.add_trace(go.Bar(x=df8['username'] , y=df8['stars'] , name='Masmovil' , marker_color='#D62728'))
-    # fig.add_trace(go.Bar(x=df9['username'] , y=df9['stars'] , name='Masmovil' , marker_color='#D62728'))
-    # fig.add_trace(go.Bar(x=df10['username'] , y=df10['stars'] , name='Masmovil' , marker_color='#D62728'))
-    # fig.add_trace(go.Bar(x=df11['username'] , y=df11['stars'] , name='Masmovil' , marker_color='#D62728'))
-    # fig.add_trace(go.Bar(x=df12['username'] , y=df12['stars'] , name='Masmovil' , marker_color='#D62728'))
-
 
 
     # y = [line] * df2['Descripción'].shape[0]
@@ -470,12 +443,12 @@ def make_stars_graph_figure(GRUPO_types, USER_types,start_date , end_date, wordc
                      yaxis=dict(
                           title='Stars 0 - 5' ,
                           titlefont_size=16 ,
-                          tickfont_size=12 ,showticklabels=True,
+                          tickfont_size=12 ,showticklabels=True,range=[0,5],
                           color='#C8CDD0',showline=True,gridcolor='#8D8D8D',linewidth=0.2,linecolor='#8D8D8D'
                              ) ,
                       xaxis=dict(
                           titlefont_size=16 ,
-                          tickfont_size=14 , showticklabels=True ,
+                          tickfont_size=14 , showticklabels=True , type="category",
                           #gridcolor='black',
                           color='#C8CDD0',
                             showgrid=False,gridcolor='#8D8D8D',showline=False ,linecolor='#8D8D8D' ,linewidth=0.2

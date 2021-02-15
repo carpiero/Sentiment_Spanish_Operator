@@ -4,6 +4,7 @@ import pandas as pd
 
 # df=pd.read_parquet('./data/df_total.parquet')
 df=pd.read_parquet('./data/df.parquet')
+# df = df.loc[df['username']!='@vodafoneyu']
 
 
 ########### controls
@@ -38,7 +39,7 @@ df_f.loc[df_f['username'] == '@yoigo' , 'orden'] = 3
 df_f['color'] = ''
 
 df_f.loc[df_f['username'] == '@vodafone_es' , 'color'] = '#E64A19'
-df_f.loc[df_f['username'] == '@Lowi_es' , 'color'] = '#FFAB91'
+df_f.loc[df_f['username'] == '@Lowi_es' , 'color'] =   '#FF7043'   #'#FFAB91'
 df_f.loc[df_f['username'] == '@vodafoneyu' , 'color'] = '#FF7043'
 df_f.loc[df_f['username'] == '@movistar_es' , 'color'] = '#2962FF'
 df_f.loc[df_f['username'] == '@TuentiES' , 'color'] = '#82B1FF'
