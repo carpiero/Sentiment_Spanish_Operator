@@ -264,8 +264,12 @@ app.layout = html.Div(
                    className="pretty_container four columns",style={'min-width': '500px','min-height': '350px'},
                 ),
                 html.Div(
-                    [dcc.Graph(id="coste_bars_graph",config = {'displayModeBar': False})],
-                    className="pretty_container eight columns",
+                    [dcc.Graph(id="sunburst_tweet",config = {'displayModeBar': False})],
+                    className="pretty_container four columns",
+                ),
+                html.Div(
+                    [dcc.Graph(id="source_tweet",config = {'displayModeBar': False})],
+                    className="pretty_container four columns",
                 ),
             ],
             className="row flex-display",
@@ -396,9 +400,7 @@ def update_text(GRUPO_types, USER_types,start_date , end_date ):
 )
 def make_stars_graph_figure(GRUPO_types, USER_types,start_date , end_date, wordcloud):
     df_stars= df_f
-
     df_stars = df_stars.loc[(df['username'].isin(USER_types)) &(df_stars['created_at'] >= start_date) & ( df_stars['created_at'] < end_date) ,]
-
     df_stars =  df_stars.pivot_table(index=['username','orden','color'],values=['stars']).sort_values(by='orden' ,ascending=True).reset_index()
     df_stars['stars'] = round(df_stars['stars'] ,2 )
 
@@ -415,7 +417,7 @@ def make_stars_graph_figure(GRUPO_types, USER_types,start_date , end_date, wordc
     since=datetime.datetime.strftime(since , '%d-%m-%Y')
     until=datetime.datetime.strftime(until , '%d-%m-%Y')
 
-    fig.update_layout(title=f'Análisis de Sentimiento, Stars de media {since} a {until}')
+    fig.update_layout(title=f'Análisis de Sentimiento, Stars de media desde {since} a {until}')
 
     fig.update_traces(texttemplate="%{y:.} Stars" , textposition='inside',textfont_size=13,
                       #marker_color=['#D62728', '#3366CC',  '#2CA02C', 'rgb(217, 95, 2)']
@@ -444,14 +446,15 @@ def make_stars_graph_figure(GRUPO_types, USER_types,start_date , end_date, wordc
                           title='Stars 0 - 5' ,
                           titlefont_size=16 ,
                           tickfont_size=12 ,showticklabels=True,range=[0,5],
-                          color='#C8CDD0',showline=True,gridcolor='#8D8D8D',linewidth=0.2,linecolor='#8D8D8D'
+                          color='#C8CDD0',showline=True,gridcolor='#8D8D8D',linewidth=0.2,linecolor='#8D8D8D',zerolinecolor='#8D8D8D',
+                         #zeroline=False,
                              ) ,
                       xaxis=dict(
                           titlefont_size=16 ,
                           tickfont_size=14 , showticklabels=True , type="category",
                           #gridcolor='black',
                           color='#C8CDD0',
-                            showgrid=False,gridcolor='#8D8D8D',showline=False ,linecolor='#8D8D8D' ,linewidth=0.2
+                            showgrid=False,gridcolor='#8D8D8D',showline=False ,linecolor='#8D8D8D' ,linewidth=10.2,zerolinecolor='#8D8D8D',
                              ) ,
 
                       # legend=dict(
@@ -478,8 +481,8 @@ def make_stars_graph_figure(GRUPO_types, USER_types,start_date , end_date, wordc
     Output("wordcloud", "src"),
     [
         Input("GRUPO_types" , "value") , Input("USER_types" , "value") , Input("date_picker_select" , 'start_date') ,
-        Input("date_picker_select" , 'end_date')
-    ],[State("wordcloud", "relayoutData")]
+        Input("date_picker_select" , 'end_date') ,
+    ] , [State("wordcloud" , "relayoutData")]
     # [State("lock_selector", "value"), State("wordcloud", "relayoutData")],
 )
 def make_wordcloud_figure(GRUPO_types, USER_types,start_date , end_date, wordcloud):
@@ -491,273 +494,147 @@ def make_wordcloud_figure(GRUPO_types, USER_types,start_date , end_date, wordclo
     return f'data:image/png;base64,{base64.b64encode(img.getvalue()).decode()}'
 
 
+################    sunburst_tweet graph
 
-
-
-
-
-
-
-
-
-################    coste_bars graph
-
-@app.callback(Output("coste_bars_graph", "figure"),
+@app.callback(Output("sunburst_tweet", "figure"),
     [
-        Input("GRUPO_types" , "value") , Input("USER_types" , "value") , Input("municipio_types" , "value"),Input("partida_de_coste_types" , "value")
-    ],[State("wordcloud", "relayoutData")]
+        Input("GRUPO_types" , "value") , Input("USER_types" , "value") , Input("date_picker_select" , 'start_date') ,
+        Input("date_picker_select" , 'end_date') ,
+    ] , [State("wordcloud" , "relayoutData")]
     # [State("lock_selector", "value"), State("wordcloud", "relayoutData")],
 )
-def make_coste_bars_figure(GRUPO_types, USER_types,municipio_types, partida_de_coste_types,wordcloud):
-
-    if GRUPO_types == 'TODAS' and USER_types == 'TODAS' and municipio_types == 'TODOS':
-
-        df = df_n
-
-        fig = go.Figure()
-
-        # fig.add_trace(go.Bar(x=df['Descripción'] ,y=df['coste_efectivo_new'] ,name='Total Nacional' ,marker_color='rgb(55, 83, 109)'))
-        # fig.add_trace(go.Bar(x=df['Descripción'] ,y=df['coste_efectivo_new'] ,name='Total Nacional' ,marker_color='rgb(26, 118, 255)'))
-
-        if partida_de_coste_types !='TODOS':
-            colors = ['rgb(55, 83, 109)'] * df['Descripción'].shape[0]
-
-            for pos , item in enumerate(df['Descripción'].to_list()):
-                if item == partida_de_coste_types:
-                    colors[pos] = 'rgb(217, 95, 2)'
-            fig.add_trace(go.Bar(x=df['Descripción'] , y=df['coste_efectivo_new'] , name='Total Nacional',
-                                 marker_color=colors))
-
-            line = int(df.loc[df['Descripción'] == partida_de_coste_types , 'coste_efectivo_new'])
-            fig.add_trace(go.Scatter(x=df['Descripción'] , y=[line] * df['Descripción'].shape[0] , showlegend=False ,hoverinfo='skip',
-                                     line=dict(color='rgb(217, 95, 2)' , width=0.8 , dash='solid')))
-
-
-        else:
-            fig.add_trace(go.Bar(x=df['Descripción'] , y=df['coste_efectivo_new'] , name='Total Nacional',
-                                 marker_color='rgb(55, 83, 109)'))
-
-        fig.add_trace(go.Bar(x=df['Descripción'] , y=df['coste_efectivo_new'] , name='Total Nacional' ,
-                             marker_color='rgb(26, 118, 255)'))
-
-
-
-
-
-
-
-
-
-    elif GRUPO_types != 'TODAS' and USER_types == 'TODAS' and municipio_types == 'TODOS':
-
-        df = df_n
-
-        df2 = df_c
-
-        div = df_final_pob.loc[df_final_pob['CCAA'] == GRUPO_types , 'Población 2018'].sum()
-        df2 = df2.loc[df2['CCAA'] == GRUPO_types]
-        df2['coste_efectivo_new'] = round(df2['coste_efectivo'] / div,)
-
-
-        fig = go.Figure()
-        # fig.add_trace(go.Bar(x=df2['Descripción'] , y=df2['coste_efectivo_new'] , name=f'{GRUPO_types}' ,
-        #                      marker_color='rgb(55, 83, 109)'))
-        # fig.add_trace(go.Bar(x=df['Descripción'] , y=df['coste_efectivo_new'] , name='Total Nacional' ,
-        #                      marker_color='rgb(26, 118, 255)'))
-
-        if partida_de_coste_types !='TODOS':
-            colors = ['rgb(55, 83, 109)'] * df2['Descripción'].shape[0]
-
-            for pos , item in enumerate(df2['Descripción'].to_list()):
-                if item == partida_de_coste_types:
-                    colors[pos] = 'rgb(217, 95, 2)'
-            fig.add_trace(go.Bar(x=df2['Descripción'] , y=df2['coste_efectivo_new'] , name=f'{GRUPO_types}' ,
-                                 marker_color=colors))
-
-            line=int(df2.loc[df2['Descripción'] == partida_de_coste_types , 'coste_efectivo_new'])
-            fig.add_trace(go.Scatter(x=df['Descripción'] , y=[line] * df['Descripción'].shape[0] , showlegend=False ,hoverinfo='skip',
-                                     line=dict(color='rgb(217, 95, 2)' , width=0.8 , dash='solid')))
-
-        else:
-            fig.add_trace(go.Bar(x=df2['Descripción'] , y=df2['coste_efectivo_new'] , name=f'{GRUPO_types}' ,
-                                 marker_color='rgb(55, 83, 109)'))
-
-        fig.add_trace(go.Bar(x=df['Descripción'] , y=df['coste_efectivo_new'] , name='Total Nacional' ,
-                             marker_color='rgb(26, 118, 255)'))
-
-
-    elif GRUPO_types != 'TODAS' and USER_types != 'TODAS' and municipio_types == 'TODOS':
-
-        df = df_p
-        div = df_final_pob.loc[df_final_pob['Provincia'] == USER_types , 'Población 2018'].sum()
-        df = df.loc[df['Provincia'] == USER_types]
-        df['coste_efectivo_new'] = round(df['coste_efectivo'] / div,)
-
-
-        df2 = df_c
-        div = df_final_pob.loc[df_final_pob['CCAA'] == GRUPO_types , 'Población 2018'].sum()
-        df2 = df2.loc[df2['CCAA'] == GRUPO_types]
-        df2['coste_efectivo_new'] = round(df2['coste_efectivo'] / div,)
-
-
-        fig = go.Figure()
-        # fig.add_trace(go.Bar(x=df['Descripción'] , y=df['coste_efectivo_new'] , name=f'{USER_types}' ,
-        #                      marker_color='rgb(55, 83, 109)'))
-        # fig.add_trace(go.Bar(x=df2['Descripción'] , y=df2['coste_efectivo_new'] , name=f'{GRUPO_types}' ,
-        #                      marker_color='rgb(26, 118, 255)'))
-
-
-        if partida_de_coste_types !='TODOS':
-            colors = ['rgb(55, 83, 109)'] * df['Descripción'].shape[0]
-
-            for pos , item in enumerate(df['Descripción'].to_list()):
-                if item == partida_de_coste_types:
-                    colors[pos] = 'rgb(217, 95, 2)'
-            fig.add_trace(go.Bar(x=df['Descripción'] , y=df['coste_efectivo_new'] , name=f'{USER_types}',
-                                 marker_color=colors))
-
-            line = int(df.loc[df['Descripción'] == partida_de_coste_types , 'coste_efectivo_new'])
-            fig.add_trace(go.Scatter(x=df2['Descripción'] , y=[line] * df2['Descripción'].shape[0], showlegend=False ,hoverinfo='skip',
-                                     line=dict(color='rgb(217, 95, 2)' ,width=0.8 , dash='solid')))
-
-        else:
-            fig.add_trace(go.Bar(x=df['Descripción'] , y=df['coste_efectivo_new'] , name=f'{USER_types}' ,
-                                 marker_color='rgb(55, 83, 109)'))
-
-        fig.add_trace(go.Bar(x=df2['Descripción'] , y=df2['coste_efectivo_new'] , name=f'{GRUPO_types}' ,
-                             marker_color='rgb(26, 118, 255)'))
-
-
-
-
-
-
-    elif GRUPO_types == 'TODAS' and USER_types != 'TODAS' and municipio_types == 'TODOS':
-
-        df = df_p
-        div = df_final_pob.loc[df_final_pob['Provincia'] == USER_types , 'Población 2018'].sum()
-        df = df.loc[df['Provincia'] == USER_types]
-        df['coste_efectivo_new'] = round(df['coste_efectivo'] / div,0)
-
-
-        df2 = df_n
-
-        fig = go.Figure()
-        # fig.add_trace(go.Bar(x=df['Descripción'] , y=df['coste_efectivo_new'] , name=f'{USER_types}' ,
-        #                      marker_color='rgb(55, 83, 109)'))
-        # fig.add_trace(go.Bar(x=df2['Descripción'] , y=df2['coste_efectivo_new'] , name=f'Total Nacional' ,
-        #                      marker_color='rgb(26, 118, 255)'))
-
-        if partida_de_coste_types !='TODOS':
-            colors = ['rgb(55, 83, 109)'] * df['Descripción'].shape[0]
-
-            for pos , item in enumerate(df['Descripción'].to_list()):
-                if item == partida_de_coste_types:
-                    colors[pos] = 'rgb(217, 95, 2)'
-            fig.add_trace(go.Bar(x=df['Descripción'] , y=df['coste_efectivo_new'] , name=f'{USER_types}',
-                                 marker_color=colors))
-
-            line = int(df.loc[df['Descripción'] == partida_de_coste_types , 'coste_efectivo_new'])
-            fig.add_trace(go.Scatter(x=df2['Descripción'] , y=[line] * df2['Descripción'].shape[0] , showlegend=False ,hoverinfo='skip',
-                                     line=dict(color='rgb(217, 95, 2)' , width=0.8 , dash='solid')))
-
-        else:
-            fig.add_trace(go.Bar(x=df['Descripción'] , y=df['coste_efectivo_new'] , name=f'{USER_types}' ,
-                                 marker_color='rgb(55, 83, 109)'))
-
-        fig.add_trace(go.Bar(x=df2['Descripción'] , y=df2['coste_efectivo_new'] , name=f'Total Nacional' ,
-                             marker_color='rgb(26, 118, 255)'))
-
-
-    else:
-        df =df_m.loc[df_m['Nombre Ente Principal'] == municipio_types].sort_values(by='coste_efectivo_PC',ascending=False)
-        # df['coste_efectivo_PC'] = round(df['coste_efectivo_PC'] , )
-
-
-
-        cohorte = df_cohorte.loc[df_cohorte['Nombre Ente Principal'] == municipio_types , 'cohorte_pob'] \
-            .unique().to_list()[0]
-
-        # df2 = df_final_pob_melt_PC.loc[ df_final_pob_melt_PC['coste_efectivo_PC'] > 0]
-        df2 = df_m.pivot_table(index=['cohorte_pob','Descripción'],values=['coste_efectivo_PC'],aggfunc=np.median).reset_index()
-        df2= df2.loc[df2['cohorte_pob'] == cohorte]
-        # df2['coste_efectivo_PC'] = round(df2['coste_efectivo_PC'] , )
-
-
-        fig = go.Figure()
-        # fig.add_trace(go.Bar(x=df['Descripción'] , y=df['coste_efectivo_PC'] , name=f'{municipio_types}' ,
-        #                      marker_color='rgb(55, 83, 109)'))
-        # fig.add_trace(go.Bar(x=df2['Descripción'] , y=df2['coste_efectivo_PC'] , name=f'Media Municipios con {cohorte} hab.' ,
-        #                      marker_color='rgb(26, 118, 255)'))
-
-
-        if partida_de_coste_types !='TODOS':
-            colors = ['rgb(55, 83, 109)'] * df['Descripción'].shape[0]
-
-            for pos , item in enumerate(df['Descripción'].to_list()):
-                if item == partida_de_coste_types:
-                    colors[pos] = 'rgb(217, 95, 2)'
-            fig.add_trace(go.Bar(x=df['Descripción'] , y=df['coste_efectivo_PC'] , name=f'{municipio_types}',
-                                 marker_color=colors))
-
-            line = int(df.loc[df['Descripción'] == partida_de_coste_types , 'coste_efectivo_PC'])
-
-
-            fig.add_trace(go.Scatter(x=df2['Descripción'] , y=[line] * df2['Descripción'].shape[0], showlegend=False ,hoverinfo='skip',
-                                     line=dict(color='rgb(217, 95, 2)' , width=0.8 , dash='solid')))
-
-        else:
-            fig.add_trace(go.Bar(x=df['Descripción'] , y=df['coste_efectivo_PC'] , name=f'{municipio_types}' ,
-                                 marker_color='rgb(55, 83, 109)'))
-
-        fig.add_trace(
-            go.Bar(x=df2['Descripción'] , y=df2['coste_efectivo_PC'] , name=f'Media Municipios con {cohorte} hab.' ,
-                   marker_color='rgb(26, 118, 255)'))
-
-
-    # fig.update_traces( marker_line_color='rgb(8,48,107)')
-    fig.update_layout(margin=dict(l=20 , r=50 , t=50 , b=50) ,#plot_bgcolor="white",
-                          title='Costes €/hab. por Partida de coste' ,
-                          xaxis_tickfont_size=12 ,
-                          xaxis_tickangle=-45 ,
-                          yaxis=dict(
-                              title='Coste €/hab.' ,
-                              titlefont_size=16 ,
-                              tickfont_size=12 ,showticklabels=True,color='rgb(50, 50, 50)',
-
-                          ) ,
-                          xaxis=dict(
-                              title='Partidas de Costes' ,
-                              titlefont_size=16 ,
-                              tickfont_size=14 , showticklabels=False ,color='rgb(50, 50, 50)',
-                            showline=False,
-                            showgrid=False,
-
-                          ) ,
-
-                          legend=dict(
-                              x=0.40 ,
-                              y=0.9 ,font_color='rgb(50, 50, 50)',
-                              # bgcolor='rgba(255, 255, 255, 0)' ,
-                              # bordercolor='rgba(255, 255, 255, 0)',
-                              font_size=14,bgcolor='#eeeeee',
-        # bordercolor="Black",
-        # borderwidth=0.8
-                          ) ,
-                          barmode='group' ,
-                          # bargap=0.30 ,
-                          # bargroupgap=0.35  ,
-                        bargap = 0.10 ,  # gap between bars of adjacent location coordinates.
-                        bargroupgap = 0.25 , # gap between bars of the same location coordinate.
-
-                          paper_bgcolor="#F9F9F9",title_font_color='rgb(50, 50, 50)')
-
-    fig.update_layout(yaxis=dict(gridcolor='#cacaca') ,
-                      xaxis=dict(showline=True ,linecolor='#929292' ,linewidth=0.5),
-                      plot_bgcolor="#F9F9F9")
+def make_coste_bars_figure(GRUPO_types, USER_types,start_date , end_date, wordcloud):
+    df_stars = df_f
+    df_stars = df_stars.loc[(df['username'].isin(USER_types)) & (df_stars['created_at'] >= start_date) & (
+                df_stars['created_at'] < end_date) ,]
+
+    df_stars['count'] = 1
+    fig = px.sunburst(df_stars, path=['GRUPO' , 'username'] , values='count' , color='GRUPO',
+                      color_discrete_map = {'Vodafone': '#E64A19' , 'Movistar': '#2962FF' , 'Masmovil': '#8E8E00' , 'Orange': '#A56B00'},
+                      labels={'parent': 'Grupo Móvil','count': 'Nº de tweets','labels': 'Operadora'},#hover_name='username',
+                        hover_data = {'count': ':,' , 'GRUPO': False ,
+                                                          }
+
+
+                      )
+
+
+    # color_discrete_map = {'@vodafone_es': '#E64A19' ,
+    #                       '@Lowi_es': '#FF7043' ,
+    #                       '@vodafoneyu': '#FF7043' ,
+    #                       '@movistar_es': '#2962FF' ,
+    #                       '@TuentiES': '#82B1FF' ,
+    #                       '@o2es': '#0D47A1' ,
+    #                       '@orange_es': '#F57C00' ,
+    #                       '@jazztel_es': '#FFE0B2' ,
+    #                       '@Amena': '#FF9800' ,
+    #                       '@simyo_es': '#FFB74D' ,
+    #                       '@masmovil': '#FFFF00' ,
+    #                       '@pepephone': '#FFFF8D' ,
+    #                       '@yoigo': '#FFF9C4' ,
+    #                       '(?)': 'black' ,
+    #                       'Movistar': '#2962FF'} ,
+
+
+    fig.update_layout(margin=dict(l=10 , r=50 , t=50 , b=10) ,title='Distribución Nº tweets' ,
+                      yaxis=dict(
+                          title='Stars 0 - 5' ,
+                          titlefont_size=16 ,
+                          tickfont_size=12 , showticklabels=True , range=[0 , 5] ,
+                          color='#C8CDD0' , showline=True , gridcolor='#8D8D8D' , linewidth=0.2 , linecolor='#8D8D8D' ,
+                          zerolinecolor='#8D8D8D' ,
+                          # zeroline=False,
+                      ) ,
+                      xaxis=dict(
+                          titlefont_size=16 ,
+                          tickfont_size=14 , showticklabels=True , type="category" ,
+                          # gridcolor='black',
+                          color='#C8CDD0' ,
+                          showgrid=False , gridcolor='#8D8D8D' , showline=False , linecolor='#8D8D8D' , linewidth=10.2 ,
+                          zerolinecolor='#8D8D8D' ,
+                      ) ,
+
+                      # legend=dict(
+                      #     x=1 ,
+                      #     y=1 ,font_color='rgb(50, 50, 50)',
+                      #     # bgcolor='rgba(255, 255, 255, 0)' ,
+                      #     bgcolor='#eeeeee',
+                      #     font_size=14, #bgcolor="#e5ecf6",bordercolor="Black",
+                      # ) ,
+                      barmode='relative' ,
+                      bargap=0.20 ,  # gap between bars of adjacent location coordinates.
+                      # bargroupgap=0.1,  # gap between bars of the same location coordinate.
+                      autosize=True , showlegend=False , paper_bgcolor="#212E36" , title_font_color='#EFF3F5' ,
+                      plot_bgcolor="#212E36",
+                      hoverlabel=dict(
+
+                          font_size=16 ,
+                                 ),
+                      )
 
     return fig
 
+################    source_tweet graph
+
+@app.callback(Output("source_tweet", "figure"),
+    [
+        Input("GRUPO_types" , "value") , Input("USER_types" , "value") , Input("date_picker_select" , 'start_date') ,
+        Input("date_picker_select" , 'end_date') ,
+    ] , [State("wordcloud" , "relayoutData")]
+    # [State("lock_selector", "value"), State("wordcloud", "relayoutData")],
+)
+def make_coste_bars_figure(GRUPO_types, USER_types,start_date , end_date, wordcloud):
+    df_stars = df_f
+    df_stars = df_stars.loc[(df['username'].isin(USER_types)) & (df_stars['created_at'] >= start_date) & (
+                df_stars['created_at'] < end_date) ,]
+
+    df_stars = df_stars['source'].value_counts().rename_axis('unique_values').reset_index(name='counts').head(6)
+
+    fig = go.Figure()
+
+    fig.add_trace(go.Bar(y=df_stars['unique_values'] , x=df_stars['counts'] , name='Masmovil' ,orientation='h',
+                         ))
+
+
+
+
+    fig.update_layout(margin=dict(l=10 , r=50 , t=50 , b=10) ,title='Distribución Nº tweets' ,
+                      xaxis=dict(
+                          title='Stars 0 - 5' ,
+                          titlefont_size=16 ,
+                          tickfont_size=12 , showticklabels=True ,
+                          color='#C8CDD0' , showline=True , gridcolor='#8D8D8D' , linewidth=0.2 , linecolor='#8D8D8D' ,
+                          zerolinecolor='#8D8D8D' ,
+                          # zeroline=False,
+                      ) ,
+                      yaxis=dict(
+                          titlefont_size=16 ,
+                          tickfont_size=14 , showticklabels=True , type="category" ,
+                          # gridcolor='black',
+                          color='#C8CDD0' ,
+                          showgrid=False , gridcolor='#8D8D8D' , showline=False , linecolor='#8D8D8D' , linewidth=10.2 ,
+                          zerolinecolor='#8D8D8D' ,
+                      ) ,
+
+                      # legend=dict(
+                      #     x=1 ,
+                      #     y=1 ,font_color='rgb(50, 50, 50)',
+                      #     # bgcolor='rgba(255, 255, 255, 0)' ,
+                      #     bgcolor='#eeeeee',
+                      #     font_size=14, #bgcolor="#e5ecf6",bordercolor="Black",
+                      # ) ,
+                      barmode='relative' ,
+                      bargap=0.20 ,  # gap between bars of adjacent location coordinates.
+                      # bargroupgap=0.1,  # gap between bars of the same location coordinate.
+                      autosize=True , showlegend=False , paper_bgcolor="#212E36" , title_font_color='#EFF3F5' ,
+                      plot_bgcolor="#212E36",
+                      hoverlabel=dict(
+
+                          font_size=16 ,
+                                 ),
+                      )
+
+    return fig
 
 
 

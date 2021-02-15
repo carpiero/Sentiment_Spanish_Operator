@@ -18,7 +18,7 @@ USER_dict = dict(zip(USER, USER))
 
 ############## stars graph
 
-df_f=df[['stars','username','created_at']]
+df_f=df[['stars','username','created_at','GRUPO','source']]
 
 df_f['orden'] = ''
 
