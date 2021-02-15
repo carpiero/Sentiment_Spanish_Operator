@@ -2,7 +2,8 @@ import pandas as pd
 
 
 
-df=pd.read_parquet('./data/df_total.parquet')
+# df=pd.read_parquet('./data/df_total.parquet')
+df=pd.read_parquet('./data/df.parquet')
 
 
 ########### controls
@@ -36,19 +37,19 @@ df_f.loc[df_f['username'] == '@yoigo' , 'orden'] = 3
 
 df_f['color'] = ''
 
-df_f.loc[df_f['username'] == '@vodafone_es' , 'color'] = '#FF4200'
-df_f.loc[df_f['username'] == '@Lowi_es' , 'color'] = '#8C4C36'
-df_f.loc[df_f['username'] == '@vodafoneyu' , 'color'] = '#BF4E27'
-df_f.loc[df_f['username'] == '@movistar_es' , 'color'] = '#0078FF'
-df_f.loc[df_f['username'] == '@TuentiES' , 'color'] = '#2D5C92'
-df_f.loc[df_f['username'] == '@o2es' , 'color'] = '#1B72D4'
-df_f.loc[df_f['username'] == '@orange_es' , 'color'] = '#FFA600'
-df_f.loc[df_f['username'] == '@jazztel_es' , 'color'] = '#7F6431'
-df_f.loc[df_f['username'] == '@Amena' , 'color'] = '#A27A2F'
-df_f.loc[df_f['username'] == '@simyo_es' , 'color'] = '#CA8E20'
-df_f.loc[df_f['username'] == '@masmovil' , 'color'] = '#ECFF00'
-df_f.loc[df_f['username'] == '@pepephone' , 'color'] = '#CDD933'
-df_f.loc[df_f['username'] == '@yoigo' , 'color'] = '#BBC43E'
+df_f.loc[df_f['username'] == '@vodafone_es' , 'color'] = '#E64A19'
+df_f.loc[df_f['username'] == '@Lowi_es' , 'color'] = '#FFAB91'
+df_f.loc[df_f['username'] == '@vodafoneyu' , 'color'] = '#FF7043'
+df_f.loc[df_f['username'] == '@movistar_es' , 'color'] = '#2962FF'
+df_f.loc[df_f['username'] == '@TuentiES' , 'color'] = '#82B1FF'
+df_f.loc[df_f['username'] == '@o2es' , 'color'] = '#0D47A1'
+df_f.loc[df_f['username'] == '@orange_es' , 'color'] = '#F57C00'
+df_f.loc[df_f['username'] == '@jazztel_es' , 'color'] = '#FFE0B2'
+df_f.loc[df_f['username'] == '@Amena' , 'color'] = '#FF9800'
+df_f.loc[df_f['username'] == '@simyo_es' , 'color'] = '#FFB74D'
+df_f.loc[df_f['username'] == '@masmovil' , 'color'] = '#FFFF00'
+df_f.loc[df_f['username'] == '@pepephone' , 'color'] = '#FFFF8D'
+df_f.loc[df_f['username'] == '@yoigo' , 'color'] = '#FFF9C4'
 
 
 

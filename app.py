@@ -396,9 +396,11 @@ def update_text(GRUPO_types, USER_types,start_date , end_date ):
 )
 def make_stars_graph_figure(GRUPO_types, USER_types,start_date , end_date, wordcloud):
     df_stars= df_f
+
     df_stars = df_stars.loc[(df['username'].isin(USER_types)) &(df_stars['created_at'] >= start_date) & ( df_stars['created_at'] < end_date) ,]
 
     df_stars =  df_stars.pivot_table(index=['username','orden','color'],values=['stars']).sort_values(by='orden' ,ascending=True).reset_index()
+    df_stars['stars'] = round(df_stars['stars'] ,2 )
 
     colors = df_stars['color'].to_list()
     # df0 =  df_stars.iloc[[0]]
@@ -432,6 +434,9 @@ def make_stars_graph_figure(GRUPO_types, USER_types,start_date , end_date, wordc
     # fig.add_trace(go.Bar(x=df11['username'] , y=df11['stars'] , name='Masmovil' , marker_color='#D62728'))
     # fig.add_trace(go.Bar(x=df12['username'] , y=df12['stars'] , name='Masmovil' , marker_color='#D62728'))
 
+
+
+    # y = [line] * df2['Descripción'].shape[0]
     since = datetime.datetime.strptime(start_date , '%Y-%m-%d')
     until = datetime.datetime.strptime(end_date, '%Y-%m-%d')
     since=datetime.datetime.strftime(since , '%d-%m-%Y')
@@ -439,271 +444,41 @@ def make_stars_graph_figure(GRUPO_types, USER_types,start_date , end_date, wordc
 
     fig.update_layout(title=f'Análisis de Sentimiento, Stars de media {since} a {until}')
 
-
-
-
-
-    # if partida_de_coste_types == 'TODOS':
-    #     if GRUPO_types == 'TODAS' and USER_types == 'TODAS' and municipio_types == 'TODOS':
-    #         df = df_count_cn
-    #         df1=df.iloc[[0]]
-    #         df2=df.iloc[[1]]
-    #         df3=df.iloc[[2]]
-    #         df4=df.iloc[[3]]
-    #
-    #         fig = go.Figure()
-    #         fig.add_trace(go.Bar(x=df1['CCAA'] , y=df1['PC_TOTAL'],name='Percentil 90',marker_color='#D62728'))
-    #         fig.add_trace(go.Bar(x=df2['CCAA'] , y=df2['PC_TOTAL'],name='Percentil 75',marker_color='#3366CC'))
-    #         fig.add_trace(go.Bar(x=df3['CCAA'] , y=df3['PC_TOTAL'],name='Percentil 25',marker_color='#2CA02C'))
-    #         fig.add_trace(go.Bar(x=df4['CCAA'] , y=df4['PC_TOTAL'],name='Mediana',marker_color='rgb(217, 95, 2)'))
-    #
-    #
-    #         fig.update_layout(title=f'Coste por habitante Total, Comunidades Autónomas')
-    #
-    #     elif GRUPO_types != 'TODAS' and USER_types == 'TODAS' and municipio_types == 'TODOS':
-    #         df = df_count_c_new_n
-    #         df = df.append(df_count_c.loc[df_count_c['CCAA']==GRUPO_types])
-    #         df.iloc[3,0]=f'{GRUPO_types}.'
-    #
-    #         df1 = df.iloc[[0]]
-    #         df2 = df.iloc[[1]]
-    #         df3 = df.iloc[[2]]
-    #         df4 = df.iloc[[3]]
-    #
-    #         fig = go.Figure()
-    #         fig.add_trace(go.Bar(x=df1['CCAA'] , y=df1['PC_TOTAL'] , name='Percentil 75' , marker_color='#D62728'))
-    #         fig.add_trace(go.Bar(x=df2['CCAA'] , y=df2['PC_TOTAL'] , name='Mediana' , marker_color='#3366CC'))
-    #         fig.add_trace(go.Bar(x=df3['CCAA'] , y=df3['PC_TOTAL'] , name='Percentil 25' , marker_color='#2CA02C'))
-    #         fig.add_trace(go.Bar(x=df4['CCAA'] , y=df4['PC_TOTAL'] , name='Elección' , marker_color='rgb(217, 95, 2)'))
-    #         fig.update_layout(title=f'Coste por habitante Total, Comunidades Autónomas')
-    #
-    #     elif GRUPO_types != 'TODAS' and USER_types != 'TODAS' and municipio_types == 'TODOS':
-    #         df = df_count_p_new_n
-    #         df = df.append(df_count_p.loc[df_count_p['Provincia'] == USER_types])
-    #
-    #         df.iloc[3 , 0] = f'{USER_types}.'
-    #
-    #         df1 = df.iloc[[0]]
-    #         df2 = df.iloc[[1]]
-    #         df3 = df.iloc[[2]]
-    #         df4 = df.iloc[[3]]
-    #
-    #         fig = go.Figure()
-    #         fig.add_trace(go.Bar(x=df1['Provincia'] , y=df1['PC_TOTAL'] , name='Percentil 75' , marker_color='#D62728'))
-    #         fig.add_trace(go.Bar(x=df2['Provincia'] , y=df2['PC_TOTAL'] , name='Mediana' , marker_color='#3366CC'))
-    #         fig.add_trace(go.Bar(x=df3['Provincia'] , y=df3['PC_TOTAL'] , name='Percentil 25' , marker_color='#2CA02C'))
-    #         fig.add_trace(go.Bar(x=df4['Provincia'] , y=df4['PC_TOTAL'] , name='Elección' , marker_color='rgb(217, 95, 2)'))
-    #         fig.update_layout(title=f'Coste por habitante Total, Provincias')
-    #
-    #     elif GRUPO_types == 'TODAS' and USER_types != 'TODAS' and municipio_types == 'TODOS':
-    #         df = df_count_p_new_n
-    #         df = df.append(df_count_p.loc[df_count_p['Provincia'] == USER_types])
-    #
-    #         df.iloc[3 , 0] = f'{USER_types}.'
-    #
-    #         df1 = df.iloc[[0]]
-    #         df2 = df.iloc[[1]]
-    #         df3 = df.iloc[[2]]
-    #         df4 = df.iloc[[3]]
-    #
-    #         fig = go.Figure()
-    #         fig.add_trace(go.Bar(x=df1['Provincia'] , y=df1['PC_TOTAL'] , name='Percentil 75' , marker_color='#D62728'))
-    #         fig.add_trace(go.Bar(x=df2['Provincia'] , y=df2['PC_TOTAL'] , name='Mediana' , marker_color='#3366CC'))
-    #         fig.add_trace(go.Bar(x=df3['Provincia'] , y=df3['PC_TOTAL'] , name='Percentil 25' , marker_color='#2CA02C'))
-    #         fig.add_trace(go.Bar(x=df4['Provincia'] , y=df4['PC_TOTAL'] , name='Elección' , marker_color='rgb(217, 95, 2)'))
-    #         fig.update_layout(title=f'Coste por habitante Total, Provincias')
-    #
-    #     else:
-    #         cohorte = df_cohorte.loc[df_cohorte['Nombre Ente Principal'] == municipio_types , 'cohorte_pob'].unique().to_list()[0]
-    #
-    #         df = df_final_pob[['Nombre Ente Principal' , 'cohorte_pob' , 'PC_TOTAL']].loc[
-    #             (df_final_pob['cohorte_pob'] == cohorte) & (df_final_pob['PC_TOTAL'] > 0)].sort_values(by='PC_TOTAL' ,ascending=False)
-    #         df['Nombre Ente Principal'] = df['Nombre Ente Principal'].astype('object')
-    #         df2 = df.loc[(df['PC_TOTAL'] == df['PC_TOTAL'].quantile(0.77 , interpolation='nearest')) | \
-    #                      (df['PC_TOTAL'] == df['PC_TOTAL'].quantile(0.51 , interpolation='nearest')) | \
-    #                      (df['PC_TOTAL'] == df['PC_TOTAL'].quantile(0.25 , interpolation='nearest'))]
-    #
-    #         df2.drop_duplicates(subset='PC_TOTAL' , keep='last' , inplace=True)
-    #         df2 = df2.append(df.loc[df['Nombre Ente Principal'] == municipio_types])
-    #         df = df2
-    #         df['PC_TOTAL'] = round(df['PC_TOTAL'] , )
-    #         df.iloc[3 , 0] = f'{municipio_types}.'
-    #
-    #         df1 = df.iloc[[0]]
-    #         df2 = df.iloc[[1]]
-    #         df3 = df.iloc[[2]]
-    #         df4 = df.iloc[[3]]
-    #
-    #         fig = go.Figure()
-    #         fig.add_trace(go.Bar(x=df1['Nombre Ente Principal'] , y=df1['PC_TOTAL'] , name='Percentil 75' , marker_color='#D62728'))
-    #         fig.add_trace(go.Bar(x=df2['Nombre Ente Principal'] , y=df2['PC_TOTAL'] , name='Mediana' , marker_color='#3366CC'))
-    #         fig.add_trace(go.Bar(x=df3['Nombre Ente Principal'] , y=df3['PC_TOTAL'] , name='Percentil 25' , marker_color='#2CA02C'))
-    #         fig.add_trace(go.Bar(x=df4['Nombre Ente Principal'] , y=df4['PC_TOTAL'] , name='Elección' , marker_color='rgb(217, 95, 2)'))
-    #         fig.update_layout(xaxis=dict(title=f' Municipios con {cohorte} hab.'))
-    #         fig.update_layout(title=f'Coste Mediano por habitante Total')
-    #
-    #
-    #
-    # else:
-    #     if GRUPO_types == 'TODAS' and USER_types == 'TODAS' and municipio_types == 'TODOS':
-    #         df = df_count_c_pc
-    #
-    #         df = df.loc[df['Descripción'] == partida_de_coste_types].sort_values(by='PC_TOTAL' , ascending=False)
-    #
-    #         df8 = df.loc[(df['PC_TOTAL'] == df['PC_TOTAL'].quantile(0.90 , interpolation='nearest')) | \
-    #                     (df['PC_TOTAL'] == df['PC_TOTAL'].quantile(0.75 , interpolation='nearest')) | \
-    #                     (df['PC_TOTAL'] == df['PC_TOTAL'].quantile(0.25 , interpolation='nearest'))]
-    #         df8=df8.sort_values(by='PC_TOTAL' , ascending=False)
-    #
-    #         df8=df8.append(df.loc[df['PC_TOTAL'] == df['PC_TOTAL'].quantile(0.50 , interpolation='nearest')])
-    #         df8['PC_TOTAL'] = round(df8['PC_TOTAL'] , )
-    #         df1 = df8.iloc[[0]]
-    #         df2 = df8.iloc[[1]]
-    #         df3 = df8.iloc[[2]]
-    #         df4 = df8.iloc[[3]]
-    #
-    #         fig = go.Figure()
-    #         fig.add_trace(go.Bar(x=df1['CCAA'] , y=df1['PC_TOTAL'] , name='Percentil 90' , marker_color='#D62728'))
-    #         fig.add_trace(go.Bar(x=df2['CCAA'] , y=df2['PC_TOTAL'] , name='Percentil 75' , marker_color='#3366CC'))
-    #         fig.add_trace(go.Bar(x=df3['CCAA'] , y=df3['PC_TOTAL'] , name='Percentil 25' , marker_color='#2CA02C'))
-    #         fig.add_trace(go.Bar(x=df4['CCAA'] , y=df4['PC_TOTAL'] , name='Mediana' , marker_color='rgb(217, 95, 2)'))
-    #         fig.update_layout(title=f'Coste por hab. Total, CCCAA, {partida_de_coste_types}')
-    #
-    #
-    #     elif GRUPO_types != 'TODAS' and USER_types == 'TODAS' and municipio_types == 'TODOS':
-    #         df = df_count_c_pc
-    #
-    #         df = df.loc[df['Descripción'] == partida_de_coste_types].sort_values(by='PC_TOTAL' , ascending=False)
-    #
-    #         df8 = df.loc[(df['PC_TOTAL'] == df['PC_TOTAL'].quantile(0.75 , interpolation='nearest')) | \
-    #                      (df['PC_TOTAL'] == df['PC_TOTAL'].quantile(0.50 , interpolation='nearest')) | \
-    #                      (df['PC_TOTAL'] == df['PC_TOTAL'].quantile(0.25 , interpolation='nearest'))]
-    #         df8 = df8.sort_values(by='PC_TOTAL' , ascending=False)
-    #
-    #         df8 = df8.append(df.loc[df['CCAA'] == GRUPO_types])
-    #         df8['PC_TOTAL'] = round(df8['PC_TOTAL'] , )
-    #         df8.iloc[3,0] = f'{GRUPO_types}.'
-    #
-    #         df1 = df8.iloc[[0]]
-    #         df2 = df8.iloc[[1]]
-    #         df3 = df8.iloc[[2]]
-    #         df4 = df8.iloc[[3]]
-    #
-    #         fig = go.Figure()
-    #         fig.add_trace(go.Bar(x=df1['CCAA'] , y=df1['PC_TOTAL'] , name='Percentil 75' , marker_color='#D62728'))
-    #         fig.add_trace(go.Bar(x=df2['CCAA'] , y=df2['PC_TOTAL'] , name='Mediana' , marker_color='#3366CC'))
-    #         fig.add_trace(go.Bar(x=df3['CCAA'] , y=df3['PC_TOTAL'] , name='Percentil 25' , marker_color='#2CA02C'))
-    #         fig.add_trace(go.Bar(x=df4['CCAA'] , y=df4['PC_TOTAL'] , name='Elección' , marker_color='rgb(217, 95, 2)'))
-    #         fig.update_layout(title=f'Coste por hab. Total, CCCAA, {partida_de_coste_types}')
-    #
-    #     elif GRUPO_types != 'TODAS' and USER_types != 'TODAS' and municipio_types == 'TODOS':
-    #         df = df_count_p_pc
-    #
-    #         df = df.loc[df['Descripción'] == partida_de_coste_types].sort_values(by='PC_TOTAL' , ascending=False)
-    #
-    #         df8 = df.loc[(df['PC_TOTAL'] == df['PC_TOTAL'].quantile(0.75 , interpolation='nearest')) | \
-    #                      (df['PC_TOTAL'] == df['PC_TOTAL'].quantile(0.50 , interpolation='nearest')) | \
-    #                      (df['PC_TOTAL'] == df['PC_TOTAL'].quantile(0.25 , interpolation='nearest'))]
-    #         df8 = df8.sort_values(by='PC_TOTAL' , ascending=False)
-    #
-    #         df8 = df8.append(df.loc[df['Provincia'] == USER_types])
-    #         df8['PC_TOTAL'] = round(df8['PC_TOTAL'] , )
-    #         df8.iloc[3 , 0] = f'{USER_types}.'
-    #
-    #         df1 = df8.iloc[[0]]
-    #         df2 = df8.iloc[[1]]
-    #         df3 = df8.iloc[[2]]
-    #         df4 = df8.iloc[[3]]
-    #
-    #         fig = go.Figure()
-    #         fig.add_trace(go.Bar(x=df1['Provincia'] , y=df1['PC_TOTAL'] , name='Percentil 75' , marker_color='#D62728'))
-    #         fig.add_trace(go.Bar(x=df2['Provincia'] , y=df2['PC_TOTAL'] , name='Mediana' , marker_color='#3366CC'))
-    #         fig.add_trace(go.Bar(x=df3['Provincia'] , y=df3['PC_TOTAL'] , name='Percentil 25' , marker_color='#2CA02C'))
-    #         fig.add_trace(go.Bar(x=df4['Provincia'] , y=df4['PC_TOTAL'] , name='Elección' , marker_color='rgb(217, 95, 2)'))
-    #         fig.update_layout(title=f'Coste por hab. Total, Provincias, {partida_de_coste_types}')
-    #
-    #
-    #
-    #     elif GRUPO_types == 'TODAS' and USER_types != 'TODAS' and municipio_types == 'TODOS':
-    #         df = df_count_p_pc
-    #
-    #         df = df.loc[df['Descripción'] == partida_de_coste_types].sort_values(by='PC_TOTAL' , ascending=False)
-    #
-    #         df8 = df.loc[(df['PC_TOTAL'] == df['PC_TOTAL'].quantile(0.75 , interpolation='nearest')) | \
-    #                      (df['PC_TOTAL'] == df['PC_TOTAL'].quantile(0.50 , interpolation='nearest')) | \
-    #                      (df['PC_TOTAL'] == df['PC_TOTAL'].quantile(0.25 , interpolation='nearest'))]
-    #         df8 = df8.sort_values(by='PC_TOTAL' , ascending=False)
-    #
-    #         df8 = df8.append(df.loc[df['Provincia'] == USER_types])
-    #         df8['PC_TOTAL'] = round(df8['PC_TOTAL'] , )
-    #         df8.iloc[3 , 0] = f'{USER_types}.'
-    #
-    #         df1 = df8.iloc[[0]]
-    #         df2 = df8.iloc[[1]]
-    #         df3 = df8.iloc[[2]]
-    #         df4 = df8.iloc[[3]]
-    #
-    #         fig = go.Figure()
-    #         fig.add_trace(go.Bar(x=df1['Provincia'] , y=df1['PC_TOTAL'] , name='Percentil 75' , marker_color='#D62728'))
-    #         fig.add_trace(go.Bar(x=df2['Provincia'] , y=df2['PC_TOTAL'] , name='Mediana' , marker_color='#3366CC'))
-    #         fig.add_trace(go.Bar(x=df3['Provincia'] , y=df3['PC_TOTAL'] , name='Percentil 25' , marker_color='#2CA02C'))
-    #         fig.add_trace(
-    #             go.Bar(x=df4['Provincia'] , y=df4['PC_TOTAL'] , name='Elección' , marker_color='rgb(217, 95, 2)'))
-    #         fig.update_layout(title=f'Coste por hab. Total, Provincias, {partida_de_coste_types}')
-    #
-    #     else:
-    #         cohorte = df_cohorte.loc[df_cohorte['Nombre Ente Principal'] == municipio_types , 'cohorte_pob'].unique().to_list()[0]
-    #
-    #         df = df_count_m_pc.loc[(df_count_m_pc['cohorte_pob'] == cohorte)  & (df_count_m_pc['Descripción'] == partida_de_coste_types)].sort_values(by='coste_efectivo_PC' , ascending=False)
-    #         # df['Nombre Ente Principal'] = df['Nombre Ente Principal'].astype('object')
-    #
-    #         df2 = df.loc[(df['coste_efectivo_PC'] == df['coste_efectivo_PC'].quantile(0.76 , interpolation='nearest')) | \
-    #                      (df['coste_efectivo_PC'] == df['coste_efectivo_PC'].quantile(0.53 , interpolation='nearest')) | \
-    #                      (df['coste_efectivo_PC'] == df['coste_efectivo_PC'].quantile(0.22 , interpolation='nearest'))]
-    #
-    #         df2 = df2.sort_values(by='coste_efectivo_PC' , ascending=False)
-    #         df2.drop_duplicates(subset='coste_efectivo_PC' , keep='last' , inplace=True)
-    #         df = df2.append(df.loc[df['Nombre Ente Principal'] == municipio_types])
-    #
-    #         df.iloc[3 , 0] = f'{municipio_types}.'
-    #         df['coste_efectivo_PC'] = round(df['coste_efectivo_PC'] , )
-    #
-    #         df1 = df.iloc[[0]]
-    #         df2 = df.iloc[[1]]
-    #         df3 = df.iloc[[2]]
-    #         df4 = df.iloc[[3]]
-    #
-    #         fig = go.Figure()
-    #         fig.add_trace(go.Bar(x=df1['Nombre Ente Principal'] , y=df1['coste_efectivo_PC'] , name='Percentil 75' , marker_color='#D62728'))
-    #         fig.add_trace(go.Bar(x=df2['Nombre Ente Principal'] , y=df2['coste_efectivo_PC'] , name='Mediana' , marker_color='#3366CC'))
-    #         fig.add_trace(go.Bar(x=df3['Nombre Ente Principal'] , y=df3['coste_efectivo_PC'] , name='Percentil 25' , marker_color='#2CA02C'))
-    #         fig.add_trace(go.Bar(x=df4['Nombre Ente Principal'] , y=df4['coste_efectivo_PC'] , name='Elección' , marker_color='rgb(217, 95, 2)'))
-    #         fig.update_layout(xaxis=dict(title=f'Municipios con {cohorte} hab.'))
-    #         fig.update_layout(title=f'Coste Mediano por hab., {partida_de_coste_types}')
-
     fig.update_traces(texttemplate="%{y:.} Stars" , textposition='inside',textfont_size=13,
                       #marker_color=['#D62728', '#3366CC',  '#2CA02C', 'rgb(217, 95, 2)']
                       )
-    fig.update_traces(marker_line_color='rgb(8,48,107)')
+    # fig.update_traces(marker_line_color='#C8CDD0')
 
+    line = df.loc[(df['username'].isin(USER_types)) & (df['created_at'] >= start_date) & (
+            df['created_at'] < end_date) , 'stars'].mean()
 
+    fig.add_shape(type='line' ,
+                  x0=0 ,
+                  y0=line ,
+                  x1=1 ,
+                  y1=line ,
+                  line=dict(color='#EFF3F5' , width=1.2 , dash='dash'),
+                  xref='paper' ,
+                  yref='y'
+                  )
+    # fig.add_trace(go.Scatter(x=df_stars['username'] , y=[line] * df_stars['username'].shape[0] , showlegend=False ,
+    #                          hoverinfo='skip' ,
+    #                          line=dict(color='#000000' , width=0.8 , dash='solid')))
 
 
     fig.update_layout(margin=dict(l=10 , r=50 , t=50 , b=10),
-                      xaxis_tickfont_size=12 ,
-                      # xaxis_tickangle=90 ,
-                      yaxis=dict(
+                     yaxis=dict(
                           title='Stars 0 - 5' ,
                           titlefont_size=16 ,
                           tickfont_size=12 ,showticklabels=True,
-                          color='#C8CDD0',
+                          color='#C8CDD0',showline=True,gridcolor='#8D8D8D',linewidth=0.2,linecolor='#8D8D8D'
                              ) ,
                       xaxis=dict(
                           titlefont_size=16 ,
                           tickfont_size=14 , showticklabels=True ,
-                          gridcolor='black',
+                          #gridcolor='black',
                           color='#C8CDD0',
-                            showgrid=False,showline=False,
+                            showgrid=False,gridcolor='#8D8D8D',showline=False ,linecolor='#8D8D8D' ,linewidth=0.2
                              ) ,
 
                       # legend=dict(
@@ -716,11 +491,9 @@ def make_stars_graph_figure(GRUPO_types, USER_types,start_date , end_date, wordc
                       barmode='relative' ,
                       bargap=0.20 ,  # gap between bars of adjacent location coordinates.
                       # bargroupgap=0.1,  # gap between bars of the same location coordinate.
-                      autosize=True,showlegend=False,paper_bgcolor="#212E36",title_font_color='#EFF3F5')
+                      autosize=True,showlegend=False,paper_bgcolor="#212E36",title_font_color='#EFF3F5', plot_bgcolor="#212E36")
 
-    fig.update_layout(yaxis=dict(gridcolor='#cacaca') ,
-                      xaxis=dict(showline=True ,linecolor='#C8CDD0' ,linewidth=0.5),
-                      plot_bgcolor="#212E36")
+
 
     return fig
 
