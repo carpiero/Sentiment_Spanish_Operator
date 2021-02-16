@@ -653,7 +653,9 @@ def make_source_tweet_figure(GRUPO_types, USER_types,start_date , end_date, word
 )
 def make_time_tweet_figure(GRUPO_types, USER_types,start_date , end_date, wordcloud):
     df_stars = df_f
-    df_stars = df_stars.loc[df['username'].isin(USER_types)]
+    # df_stars = df_stars.loc[df['username'].isin(USER_types)]
+    df_stars = df_stars.loc[(df['username'].isin(USER_types)) & (df_stars['created_at'] >= start_date) & (
+            df_stars['created_at'] < end_date) ,]
     df_media_total = df_stars.groupby(pd.Grouper(key='created_at' , freq='W'))[['stars']].mean().reset_index()
     df_media_total['username'] = 'Media Operadoras'
     df_stars = df_stars.groupby(['username',pd.Grouper(key='created_at',freq='W')])[['stars']].mean().reset_index()
@@ -667,10 +669,24 @@ def make_time_tweet_figure(GRUPO_types, USER_types,start_date , end_date, wordcl
     #                          mode='lines+markers' ,
     #                          name='lines+markers'))
     fig = px.line(df_stars , x='created_at' , y='stars' , color='username' ,
-                  #labels={} ,
+                  labels={'created_at': 'Fecha'} ,
                   hover_name='username',
-                  hover_data={'stars': ':,' , 'username': False ,'created_at': False ,
-                              }
+                  hover_data={'stars': ':,' , 'username': False ,'created_at': True ,
+                              },
+                  color_discrete_map={'@vodafone_es': '#E64A19',
+                                      '@Lowi_es':   '#FF7043',   #'#FFAB91'
+                                        '@vodafoneyu': '#FF7043',
+                                         '@movistar_es': '#2962FF',
+                                         '@TuentiES' :'#82B1FF',
+                                         '@o2es' : '#0D47A1',
+                                         '@orange_es': '#F57C00',
+                                         '@jazztel_es': '#FFE0B2',
+                                         '@Amena' : '#FF9800',
+                                         '@simyo_es': '#FFB74D',
+                                         '@masmovil' : '#FFFF00',
+                                         '@pepephone' : '#FFFF8D',
+                                         '@yoigo' : '#FFF9C4',
+                                        'Media Operadoras':'#EFF3F5'}
                   )
     fig.update_traces(mode='markers+lines')
 
