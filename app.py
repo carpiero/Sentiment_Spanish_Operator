@@ -274,19 +274,19 @@ app.layout = html.Div(
             ],
             className="row flex-display",
         ),
-        # html.Div(
-        #     [
-        #         html.Div(
-        #             [dcc.Graph(id="map_graph",config={'modeBarButtonsToRemove': ['lasso2d','pan2d'],'displaylogo': False})],
-        #             className="pretty_container eight columns",style={'min-height': '680px'},
-        #         ),
+        html.Div(
+            [
+                html.Div(
+                    [dcc.Graph(id="time_tweet",config = {'displayModeBar': False})],
+                    className="pretty_container twelve columns",#style={'min-height': '680px'},
+                ),
         #         html.Div(
         #             [dcc.Graph(id="box_graph",config = {'displayModeBar': False})],
         #             className="pretty_container four columns",style={'min-height': '680px'},
         #         )
-        #     ],
-        #     className="row flex-display",
-        # ),
+             ],
+            className="row flex-display",
+        ),
     ],
     id="mainContainer",
     style={"display": "flex", "flex-direction": "column"},
@@ -419,7 +419,7 @@ def make_stars_graph_figure(GRUPO_types, USER_types,start_date , end_date, wordc
 
     fig.update_layout(title=f'Análisis de Sentimiento, Stars de media desde {since} a {until}')
 
-    fig.update_traces(texttemplate="%{y:.} Stars" , textposition='inside',textfont_size=13,
+    fig.update_traces(texttemplate="%{y:.2f} Stars" , textposition='inside',textfont_size=13,
                       #marker_color=['#D62728', '#3366CC',  '#2CA02C', 'rgb(217, 95, 2)']
                       )
     # fig.update_traces(marker_line_color='#C8CDD0')
@@ -449,8 +449,7 @@ def make_stars_graph_figure(GRUPO_types, USER_types,start_date , end_date, wordc
                           color='#C8CDD0',showline=True,gridcolor='#8D8D8D',linewidth=0.2,linecolor='#8D8D8D',zerolinecolor='#8D8D8D',
                          #zeroline=False,
                              ) ,
-                      xaxis=dict(
-                          titlefont_size=16 ,
+                      xaxis=dict( titlefont_size=16 ,
                           tickfont_size=14 , showticklabels=True , type="category",
                           #gridcolor='black',
                           color='#C8CDD0',
@@ -503,12 +502,14 @@ def make_wordcloud_figure(GRUPO_types, USER_types,start_date , end_date, wordclo
     ] , [State("wordcloud" , "relayoutData")]
     # [State("lock_selector", "value"), State("wordcloud", "relayoutData")],
 )
-def make_coste_bars_figure(GRUPO_types, USER_types,start_date , end_date, wordcloud):
+def make_sunburts_tweet_figure(GRUPO_types, USER_types,start_date , end_date, wordcloud):
     df_stars = df_f
     df_stars = df_stars.loc[(df['username'].isin(USER_types)) & (df_stars['created_at'] >= start_date) & (
                 df_stars['created_at'] < end_date) ,]
 
     df_stars['count'] = 1
+
+    sum= df_stars['count'].sum()
     fig = px.sunburst(df_stars, path=['GRUPO' , 'username'] , values='count' , color='GRUPO',
                       color_discrete_map = {'Vodafone': '#E64A19' , 'Movistar': '#2962FF' , 'Masmovil': '#8E8E00' , 'Orange': '#A56B00'},
                       labels={'parent': 'Grupo Móvil','count': 'Nº de tweets','labels': 'Operadora'},#hover_name='username',
@@ -517,7 +518,7 @@ def make_coste_bars_figure(GRUPO_types, USER_types,start_date , end_date, wordcl
 
 
                       )
-
+    fig.update_traces(textinfo="label+percent root")
 
     # color_discrete_map = {'@vodafone_es': '#E64A19' ,
     #                       '@Lowi_es': '#FF7043' ,
@@ -536,7 +537,7 @@ def make_coste_bars_figure(GRUPO_types, USER_types,start_date , end_date, wordcl
     #                       'Movistar': '#2962FF'} ,
 
 
-    fig.update_layout(margin=dict(l=10 , r=50 , t=50 , b=10) ,title='Distribución Nº tweets' ,
+    fig.update_layout(margin=dict(l=15 , r=15 , t=30 , b=5) ,title=f'Distribución Nº tweets {sum}' ,
                       yaxis=dict(
                           title='Stars 0 - 5' ,
                           titlefont_size=16 ,
@@ -568,7 +569,7 @@ def make_coste_bars_figure(GRUPO_types, USER_types,start_date , end_date, wordcl
                       plot_bgcolor="#212E36",
                       hoverlabel=dict(
 
-                          font_size=16 ,
+                          font_size=14,
                                  ),
                       )
 
@@ -583,24 +584,28 @@ def make_coste_bars_figure(GRUPO_types, USER_types,start_date , end_date, wordcl
     ] , [State("wordcloud" , "relayoutData")]
     # [State("lock_selector", "value"), State("wordcloud", "relayoutData")],
 )
-def make_coste_bars_figure(GRUPO_types, USER_types,start_date , end_date, wordcloud):
+def make_source_tweet_figure(GRUPO_types, USER_types,start_date , end_date, wordcloud):
     df_stars = df_f
     df_stars = df_stars.loc[(df['username'].isin(USER_types)) & (df_stars['created_at'] >= start_date) & (
                 df_stars['created_at'] < end_date) ,]
 
-    df_stars = df_stars['source'].value_counts().rename_axis('unique_values').reset_index(name='counts').head(6)
+    df_stars = df_stars['source'].value_counts().rename_axis('unique_values').reset_index(name='counts').head(6).sort_values(by='counts' ,ascending=True)
+    df_stars['percent'] = round(df_stars['counts'] / df_stars['counts'].sum()*100,1)
+    # df_stars = df_stars.style.format({'percent': '{:,.1%}'.format})
+    colors=['#BBDEFB','#90CAF9','#64B5F6','#2196F3','#1976D2','#0D47A1']
 
     fig = go.Figure()
 
-    fig.add_trace(go.Bar(y=df_stars['unique_values'] , x=df_stars['counts'] , name='Masmovil' ,orientation='h',
+    fig.add_trace(go.Bar(y=df_stars['unique_values'] , x=df_stars['percent'] , name='Masmovil' ,orientation='h',marker_color=colors,
                          ))
 
+    fig.update_traces(texttemplate="%{x:.1f} %" , textposition='auto' , textfont_size=13 ,
+                      # marker_color=['#D62728', '#3366CC',  '#2CA02C', 'rgb(217, 95, 2)']
+                      )
 
-
-
-    fig.update_layout(margin=dict(l=10 , r=50 , t=50 , b=10) ,title='Distribución Nº tweets' ,
+    fig.update_layout(margin=dict(l=10 , r=20 , t=30 , b=10) ,title='Origen tweets' ,
                       xaxis=dict(
-                          title='Stars 0 - 5' ,
+                          title='Porcentaje' ,#range=[0,100],
                           titlefont_size=16 ,
                           tickfont_size=12 , showticklabels=True ,
                           color='#C8CDD0' , showline=True , gridcolor='#8D8D8D' , linewidth=0.2 , linecolor='#8D8D8D' ,
@@ -635,6 +640,83 @@ def make_coste_bars_figure(GRUPO_types, USER_types,start_date , end_date, wordcl
                       )
 
     return fig
+
+
+################    time_tweet graph
+
+@app.callback(Output("time_tweet", "figure"),
+    [
+        Input("GRUPO_types" , "value") , Input("USER_types" , "value") , Input("date_picker_select" , 'start_date') ,
+        Input("date_picker_select" , 'end_date') ,
+    ] , [State("wordcloud" , "relayoutData")]
+    # [State("lock_selector", "value"), State("wordcloud", "relayoutData")],
+)
+def make_time_tweet_figure(GRUPO_types, USER_types,start_date , end_date, wordcloud):
+    df_stars = df_f
+    df_stars = df_stars.loc[df['username'].isin(USER_types)]
+    df_media_total = df_stars.groupby(pd.Grouper(key='created_at' , freq='W'))[['stars']].mean().reset_index()
+    df_media_total['username'] = 'Media Operadoras'
+    df_stars = df_stars.groupby(['username',pd.Grouper(key='created_at',freq='W')])[['stars']].mean().reset_index()
+    df_stars =df_stars.append(df_media_total)
+
+    df_stars['stars'] = round(df_stars['stars'] , 2)
+
+    fig = go.Figure()
+
+    # fig.add_trace(go.Scatter(x=df_stars['created_at'] , y=df_stars['stars'] ,
+    #                          mode='lines+markers' ,
+    #                          name='lines+markers'))
+    fig = px.line(df_stars , x='created_at' , y='stars' , color='username' ,
+                  #labels={} ,
+                  hover_name='username',
+                  hover_data={'stars': ':,' , 'username': False ,'created_at': False ,
+                              }
+                  )
+    fig.update_traces(mode='markers+lines')
+
+    fig.update_layout(margin=dict(l=10 , r=20 , t=30 , b=10) ,title='Evolución Sentimiento Medio' ,
+                      xaxis=dict(title='',
+                          #title='Porcentaje' ,#range=[0,100],
+                          titlefont_size=16 ,
+                          tickfont_size=12 , showticklabels=True ,
+                          color='#C8CDD0' , showline=True , gridcolor='#8D8D8D' , linewidth=0.2 , linecolor='#8D8D8D' ,
+                          zerolinecolor='#8D8D8D' ,showgrid=False ,
+                          # zeroline=False,
+                      ) ,
+                      yaxis=dict(
+                          titlefont_size=16 ,
+                          tickfont_size=14 , showticklabels=True ,
+                          # gridcolor='black',
+                          color='#C8CDD0' ,
+                          showgrid=False , gridcolor='#8D8D8D' , showline=True , linecolor='#8D8D8D' , linewidth=0.2 ,
+                          zerolinecolor='#8D8D8D' ,
+                      ) ,
+
+                      legend=dict(
+                          x=1 ,
+                          y=1 ,font_color='#C8CDD0',
+                          # bgcolor='rgba(255, 255, 255, 0)' ,
+                          bgcolor='#212E36',
+                          font_size=14, #bgcolor="#e5ecf6",
+                          bordercolor="#192229",
+                      ) ,
+                      barmode='relative' ,
+                      bargap=0.20 ,  # gap between bars of adjacent location coordinates.
+                      # bargroupgap=0.1,  # gap between bars of the same location coordinate.
+                      autosize=True , showlegend=True , paper_bgcolor="#212E36" , title_font_color='#EFF3F5' ,
+                      plot_bgcolor="#212E36",
+                      hoverlabel=dict(
+
+                          font_size=16 ,
+                                 ),
+                      )
+
+    return fig
+
+
+
+
+
 
 
 
