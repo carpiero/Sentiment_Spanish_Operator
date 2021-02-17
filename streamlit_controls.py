@@ -14,8 +14,8 @@ if __name__ == "__main__":
 
     user = cfg['ssh']['username']
     passw = cfg['ssh']['password']
-    # engine = create_engine(f'postgresql://{user}:{passw}@192.168.1.170/carpiero' )
-    engine = create_engine(f'postgresql://{user}:{passw}@asuscar.duckdns.org/carpiero',echo=True)
+    engine = create_engine(f'postgresql://{user}:{passw}@192.168.1.170/carpiero' )
+    # engine = create_engine(f'postgresql://{user}:{passw}@asuscar.duckdns.org/carpiero',echo=True)
 
     # engine = create_engine(f'postgresql://{user}:{passw}@localhost/carpiero')
     sqlite_connection = engine.connect()
