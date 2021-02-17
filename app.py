@@ -512,7 +512,7 @@ def make_sunburts_tweet_figure(GRUPO_types, USER_types,start_date , end_date, wo
     sum= df_stars['count'].sum()
     fig = px.sunburst(df_stars, path=['GRUPO' , 'username'] , values='count' , color='GRUPO',
                       color_discrete_map = {'Vodafone': '#E64A19' , 'Movistar': '#2962FF' , 'Masmovil': '#8E8E00' , 'Orange': '#A56B00'},
-                      labels={'parent': 'Grupo Móvil','count': 'Nº de tweets','labels': 'Operadora'},#hover_name='username',
+                      labels={'parent': 'Grupo Móvil','count': 'Nº de Menciones','labels': 'Operadora'},#hover_name='username',
                         hover_data = {'count': ':,' , 'GRUPO': False ,
                                                           }
 
@@ -537,7 +537,7 @@ def make_sunburts_tweet_figure(GRUPO_types, USER_types,start_date , end_date, wo
     #                       'Movistar': '#2962FF'} ,
 
 
-    fig.update_layout(margin=dict(l=15 , r=15 , t=30 , b=5) ,title=f'Distribución Nº tweets {sum}' ,
+    fig.update_layout(margin=dict(l=15 , r=15 , t=30 , b=5) ,title=f'Distribución Nº de Menciones {sum}' ,
                       yaxis=dict(
                           title='Stars 0 - 5' ,
                           titlefont_size=16 ,
@@ -671,7 +671,7 @@ def make_time_tweet_figure(GRUPO_types, USER_types,start_date , end_date, wordcl
     fig = px.line(df_stars , x='created_at' , y='stars' , color='username' ,
                   labels={'created_at': 'Fecha'} ,
                   hover_name='username',
-                  hover_data={'stars': ':,' , 'username': False ,'created_at': True ,
+                  hover_data={'stars': ':,' , 'username': False ,'created_at': '|Semana %V del año %Y' ,
                               },
                   color_discrete_map={'@vodafone_es': '#E64A19',
                                       '@Lowi_es':   '#FF7043',   #'#FFAB91'
@@ -688,9 +688,9 @@ def make_time_tweet_figure(GRUPO_types, USER_types,start_date , end_date, wordcl
                                          '@yoigo' : '#FFF9C4',
                                         'Media Operadoras':'#EFF3F5'}
                   )
-    fig.update_traces(mode='markers+lines')
+    fig.update_traces(mode='lines+markers',line=dict( width=2))
 
-    fig.update_layout(margin=dict(l=10 , r=20 , t=30 , b=10) ,title='Evolución Sentimiento Medio' ,
+    fig.update_layout(margin=dict(l=10 , r=20 , t=30 , b=10) ,title='Evolución Sentimiento Medio Semanal' ,
                       xaxis=dict(title='',
                           #title='Porcentaje' ,#range=[0,100],
                           titlefont_size=16 ,
@@ -714,7 +714,7 @@ def make_time_tweet_figure(GRUPO_types, USER_types,start_date , end_date, wordcl
                           # bgcolor='rgba(255, 255, 255, 0)' ,
                           bgcolor='#212E36',
                           font_size=14, #bgcolor="#e5ecf6",
-                          bordercolor="#192229",
+                          bordercolor="#192229",borderwidth=2, title_text='',
                       ) ,
                       barmode='relative' ,
                       bargap=0.20 ,  # gap between bars of adjacent location coordinates.
