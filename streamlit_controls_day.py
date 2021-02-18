@@ -14,10 +14,10 @@ if __name__ == "__main__":
 
     user = cfg['ssh']['username']
     passw = cfg['ssh']['password']
-    engine = create_engine(f'postgresql://{user}:{passw}@192.168.1.170/carpiero' )
+    # engine = create_engine(f'postgresql://{user}:{passw}@192.168.1.170/carpiero' )
     # engine = create_engine(f'postgresql://{user}:{passw}@asuscar.duckdns.org/carpiero',echo=True )
 
-    # engine = create_engine(f'postgresql://{user}:{passw}@localhost/carpiero' )
+    engine = create_engine(f'postgresql://{user}:{passw}@localhost/carpiero' )
     sqlite_connection = engine.connect()
 
     df = pd.read_sql_query("SELECT * FROM twitter_operators_sent_02" , engine , coerce_float=True ,parse_dates=['created_at'])
@@ -51,8 +51,8 @@ if __name__ == "__main__":
         if p < 7:
             print(i,':', counts_nsw[i])
 
-    df_yest=pd.read_parquet('./data/df.parquet')
-    # df_yest=pd.read_parquet('./data/df_total.parquet')
+    # df_yest=pd.read_parquet('./data/df.parquet')
+    df_yest=pd.read_parquet('./data/df_total.parquet')
 
     df_total = pd.concat([df_yest , df] , axis=0)
 
