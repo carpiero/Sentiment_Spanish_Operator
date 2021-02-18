@@ -166,7 +166,7 @@ app.layout = html.Div(
                                 'float': 'right','margin-top':'35px'
                             },
                         ),html.H3(
-                                    "Análisis de sentimiento Twitter",
+                                    "Análisis de Sentimiento Twitter",
                                     style={"margin-bottom": "0px"},
                                 ),
                                 html.H5(
@@ -456,7 +456,7 @@ def make_stars_graph_figure(USER_types,start_date , end_date, wordcloud):
 
     fig.update_layout(margin=dict(l=10 , r=50 , t=50 , b=10),
                      yaxis=dict(
-                          title='Stars 0 - 5' ,
+                          title='Stars 1 - 5' ,
                           titlefont_size=16 ,
                           tickfont_size=12 ,showticklabels=True,range=[0,5],
                           color='#C8CDD0',showline=True,gridcolor='#8D8D8D',linewidth=0.2,linecolor='#8D8D8D',zerolinecolor='#8D8D8D',
@@ -682,7 +682,7 @@ def make_time_tweet_figure(USER_types,start_date , end_date, wordcloud):
                               },
                   color_discrete_map={'@vodafone_es': '#E64A19',
                                       '@Lowi_es':   '#FF7043',   #'#FFAB91'
-                                        #'@vodafoneyu': '#FF7043',
+                                        '@vodafoneyu': '#212E36',
                                          '@movistar_es': '#2962FF',
                                          '@TuentiES' :'#82B1FF',
                                          '@o2es' : '#0D47A1',
@@ -694,10 +694,11 @@ def make_time_tweet_figure(USER_types,start_date , end_date, wordcloud):
                                          '@pepephone' : '#FFFF8D',
                                          '@yoigo' : '#FFF9C4',
                                         'Media Operadoras':'#EFF3F5'},
-                  category_orders={'username': ['Media Operadoras','@vodafone_es' , '@Lowi_es', #'@vodafoneyu',
-                                                '@movistar_es','@o2es','@TuentiES' ,'@orange_es','@Amena',
-                                                '@simyo_es','@jazztel_es','@masmovil','@pepephone','@yoigo']}
-                  )
+                  category_orders={'username': ['Media Operadoras','@vodafone_es' , '@Lowi_es','@movistar_es','@o2es',
+                                                '@TuentiES' ,'@orange_es','@Amena','@simyo_es','@jazztel_es','@masmovil',
+                                                '@pepephone','@yoigo',
+                                                '@vodafoneyu']})
+
     fig.update_traces(mode='lines+markers',line=dict( width=2))
 
     fig.update_layout(margin=dict(l=10 , r=20 , t=30 , b=10) ,title='Evolución Sentimiento Medio Semanal',
@@ -776,7 +777,7 @@ def make_menciones_tweet_figure(USER_types,start_date , end_date, wordcloud):
                               },
                   color_discrete_map={'@vodafone_es': '#E64A19',
                                       '@Lowi_es':   '#FF7043',   #'#FFAB91'
-                                        #'@vodafoneyu': '#FF7043',
+                                        '@vodafoneyu': '#212E36',
                                          '@movistar_es': '#2962FF',
                                          '@TuentiES' :'#82B1FF',
                                          '@o2es' : '#0D47A1',
@@ -788,10 +789,11 @@ def make_menciones_tweet_figure(USER_types,start_date , end_date, wordcloud):
                                          '@pepephone' : '#FFFF8D',
                                          '@yoigo' : '#FFF9C4',
                                         'Media Operadoras':'#EFF3F5'},
-                  category_orders={'username': ['Media Operadoras','@vodafone_es' , '@Lowi_es', #'@vodafoneyu',
-                                                '@movistar_es','@o2es','@TuentiES' ,'@orange_es','@Amena',
-                                                '@simyo_es','@jazztel_es','@masmovil','@pepephone','@yoigo']}
-                  )
+                  category_orders={ 'username': ['@vodafone_es' , '@Lowi_es' , '@movistar_es' , '@o2es' ,
+                                   '@TuentiES' , '@orange_es' , '@Amena' , '@simyo_es' , '@jazztel_es' , '@masmovil' ,
+                                   '@pepephone' , '@yoigo' ,
+                                   '@vodafoneyu']})
+
     fig.update_traces(mode='lines+markers',line=dict( width=2))
 
     fig.update_layout(margin=dict(l=10 , r=20 , t=30 , b=10) ,title='Evolución Número de menciones Semanal',
@@ -842,6 +844,6 @@ def make_menciones_tweet_figure(USER_types,start_date , end_date, wordcloud):
 
 # Main
 if __name__ == "__main__":
-    app.run_server(debug=True)
+    app.run_server(debug=False)
 
     ########### debug FALSE
