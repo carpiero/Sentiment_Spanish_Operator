@@ -17,7 +17,7 @@ if __name__ == "__main__":
     # engine = create_engine(f'postgresql://{user}:{passw}@192.168.1.170/carpiero' )
     # engine = create_engine(f'postgresql://{user}:{passw}@asuscar.duckdns.org/carpiero',echo=True)
 
-    # engine = create_engine(f'postgresql://{user}:{passw}@localhost/carpiero')
+    engine = create_engine(f'postgresql://{user}:{passw}@localhost/carpiero')
     sqlite_connection = engine.connect()
 
     df_postgresql = pd.read_sql_query("SELECT * FROM twitter_operators_sent_02" , engine , coerce_float=True ,parse_dates=['created_at'])

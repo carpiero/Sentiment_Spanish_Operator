@@ -844,6 +844,6 @@ def make_menciones_tweet_figure(USER_types,start_date , end_date, wordcloud):
 
 # Main
 if __name__ == "__main__":
-    app.run_server(debug=False)
+    app.run_server(debug=True)
 
     ########### debug FALSE
