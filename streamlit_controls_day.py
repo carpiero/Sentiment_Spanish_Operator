@@ -69,6 +69,7 @@ if __name__ == "__main__":
     for feature , dtype in feature_types.items():
         df_total.loc[: , feature] = df_total[feature].astype(dtype)
 
+    # df_total = df_total[df_total['username'] != '@vodafoneyu']
 
     df_total.to_parquet('./data/df_total.parquet')
     print('\n\nFinish')

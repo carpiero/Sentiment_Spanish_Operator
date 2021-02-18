@@ -30,7 +30,7 @@ tomorrow = today + datetime.timedelta(days=1)
 warnings.filterwarnings('ignore')
 
 #####   controls
-from controls import df, GRUPO_dict, USER_dict, df_f
+from controls import df, GRUPO_dict, USER_dict, df_f, df_g_stars, df_word, df_g_sunburst, df_g_source, df_g_time, df_g_menciones
 
 
 ############# RUN APP
@@ -287,6 +287,19 @@ app.layout = html.Div(
              ],
             className="row flex-display",
         ),
+                html.Div(
+            [
+                html.Div(
+                    [dcc.Graph(id="menciones_tweet",config = {'displayModeBar': False})],
+                    className="pretty_container twelve columns",#style={'min-height': '680px'},
+                ),
+        #         html.Div(
+        #             [dcc.Graph(id="box_graph",config = {'displayModeBar': False})],
+        #             className="pretty_container four columns",style={'min-height': '680px'},
+        #         )
+             ],
+            className="row flex-display",
+        ),
     ],
     id="mainContainer",
     style={"display": "flex", "flex-direction": "column"},
@@ -323,11 +336,11 @@ def display_status(GRUPO_types):
 
 @app.callback(Output("Tweets_Totales_text", "children"),
     [
-        Input("GRUPO_types" , "value") , Input("USER_types" , "value") , Input("date_picker_select" , 'start_date'),Input("date_picker_select" , 'end_date')
+         Input("USER_types" , "value") , Input("date_picker_select" , 'start_date'),Input("date_picker_select" , 'end_date')
 
     ],
 )
-def update_text(GRUPO_types, USER_types,start_date , end_date ):
+def update_text(USER_types,start_date , end_date ):
 
     # value=df.loc[df['username'].isin(USER_types),'username'].count()
 
@@ -340,12 +353,12 @@ def update_text(GRUPO_types, USER_types,start_date , end_date ):
 
 @app.callback (Output("sentimiento_medio", "children"),
     [
-        Input("GRUPO_types" , "value") , Input("USER_types" , "value") , Input("date_picker_select" , 'start_date'),Input("date_picker_select" , 'end_date')
+        Input("USER_types" , "value") , Input("date_picker_select" , 'start_date'),Input("date_picker_select" , 'end_date')
 
     ],
 )
 
-def update_text(GRUPO_types, USER_types,start_date , end_date ):
+def update_text(USER_types,start_date , end_date ):
 
     value = df.loc[(df['username'].isin(USER_types)) & (df['created_at'] >= start_date) & (
                 df['created_at'] < end_date) , 'stars'].mean()
@@ -356,11 +369,11 @@ def update_text(GRUPO_types, USER_types,start_date , end_date ):
 
 @app.callback (Output("twitt_best_likes", "children"),
     [
-        Input("GRUPO_types" , "value") , Input("USER_types" , "value") , Input("date_picker_select" , 'start_date'),Input("date_picker_select" , 'end_date')
+        Input("USER_types" , "value") , Input("date_picker_select" , 'start_date'),Input("date_picker_select" , 'end_date')
 
     ],
 )
-def update_text(GRUPO_types, USER_types,start_date , end_date ):
+def update_text(USER_types,start_date , end_date ):
 
     value = df.loc[(df['username'].isin(USER_types)) & (df['created_at'] >= start_date) & (
             df['created_at'] < end_date) & (df['urls'] != 'no url')]
@@ -372,12 +385,12 @@ def update_text(GRUPO_types, USER_types,start_date , end_date ):
 
 @app.callback (Output("url_text", "children"),
     [
-        Input("GRUPO_types" , "value") , Input("USER_types" , "value") , Input("date_picker_select" , 'start_date') ,
+        Input("USER_types" , "value") , Input("date_picker_select" , 'start_date') ,
         Input("date_picker_select" , 'end_date')
 
     ],
 )
-def update_text(GRUPO_types, USER_types,start_date , end_date ):
+def update_text(USER_types,start_date , end_date ):
     value = df.loc[(df['username'].isin(USER_types)) & (df['created_at'] >= start_date) & (
             df['created_at'] < end_date) & (df['urls'] != 'no url')]
 
@@ -393,13 +406,13 @@ def update_text(GRUPO_types, USER_types,start_date , end_date ):
 @app.callback(
     Output("stars_graph", "figure"),
     [
-        Input("GRUPO_types" , "value") , Input("USER_types" , "value") , Input("date_picker_select" , 'start_date') ,
+        Input("USER_types" , "value") , Input("date_picker_select" , 'start_date') ,
         Input("date_picker_select" , 'end_date'),
             ],[State("wordcloud", "relayoutData")]
     # [State("lock_selector", "value"), State("wordcloud", "relayoutData")],
 )
-def make_stars_graph_figure(GRUPO_types, USER_types,start_date , end_date, wordcloud):
-    df_stars= df_f
+def make_stars_graph_figure(USER_types,start_date , end_date, wordcloud):
+    df_stars= df_g_stars
     df_stars = df_stars.loc[(df['username'].isin(USER_types)) &(df_stars['created_at'] >= start_date) & ( df_stars['created_at'] < end_date) ,]
     df_stars =  df_stars.pivot_table(index=['username','orden','color'],values=['stars']).sort_values(by='orden' ,ascending=True).reset_index()
     df_stars['stars'] = round(df_stars['stars'] ,2 )
@@ -479,13 +492,14 @@ def make_stars_graph_figure(GRUPO_types, USER_types,start_date , end_date, wordc
 @app.callback(
     Output("wordcloud", "src"),
     [
-        Input("GRUPO_types" , "value") , Input("USER_types" , "value") , Input("date_picker_select" , 'start_date') ,
+         Input("USER_types" , "value") , Input("date_picker_select" , 'start_date') ,
         Input("date_picker_select" , 'end_date') ,
     ] , [State("wordcloud" , "relayoutData")]
     # [State("lock_selector", "value"), State("wordcloud", "relayoutData")],
 )
-def make_wordcloud_figure(GRUPO_types, USER_types,start_date , end_date, wordcloud):
-    df_filter = df.loc[(df['username'].isin(USER_types)) & (df['created_at'] >= start_date) & (df['created_at'] < end_date)]
+def make_wordcloud_figure(USER_types,start_date , end_date, wordcloud):
+    df_wor = df_word
+    df_filter = df_wor.loc[(df_wor['username'].isin(USER_types)) & (df_wor['created_at'] >= start_date) & (df_wor['created_at'] < end_date)]
     all_words = ' '.join([text for i in df_filter[ 'Tweet_Content_Token'] for text in i])
 
     img= BytesIO()
@@ -497,13 +511,13 @@ def make_wordcloud_figure(GRUPO_types, USER_types,start_date , end_date, wordclo
 
 @app.callback(Output("sunburst_tweet", "figure"),
     [
-        Input("GRUPO_types" , "value") , Input("USER_types" , "value") , Input("date_picker_select" , 'start_date') ,
+        Input("USER_types" , "value") , Input("date_picker_select" , 'start_date') ,
         Input("date_picker_select" , 'end_date') ,
     ] , [State("wordcloud" , "relayoutData")]
     # [State("lock_selector", "value"), State("wordcloud", "relayoutData")],
 )
-def make_sunburts_tweet_figure(GRUPO_types, USER_types,start_date , end_date, wordcloud):
-    df_stars = df_f
+def make_sunburts_tweet_figure(USER_types,start_date , end_date, wordcloud):
+    df_stars = df_g_sunburst
     df_stars = df_stars.loc[(df['username'].isin(USER_types)) & (df_stars['created_at'] >= start_date) & (
                 df_stars['created_at'] < end_date) ,]
 
@@ -519,22 +533,6 @@ def make_sunburts_tweet_figure(GRUPO_types, USER_types,start_date , end_date, wo
 
                       )
     fig.update_traces(textinfo="label+percent root")
-
-    # color_discrete_map = {'@vodafone_es': '#E64A19' ,
-    #                       '@Lowi_es': '#FF7043' ,
-    #                       '@vodafoneyu': '#FF7043' ,
-    #                       '@movistar_es': '#2962FF' ,
-    #                       '@TuentiES': '#82B1FF' ,
-    #                       '@o2es': '#0D47A1' ,
-    #                       '@orange_es': '#F57C00' ,
-    #                       '@jazztel_es': '#FFE0B2' ,
-    #                       '@Amena': '#FF9800' ,
-    #                       '@simyo_es': '#FFB74D' ,
-    #                       '@masmovil': '#FFFF00' ,
-    #                       '@pepephone': '#FFFF8D' ,
-    #                       '@yoigo': '#FFF9C4' ,
-    #                       '(?)': 'black' ,
-    #                       'Movistar': '#2962FF'} ,
 
 
     fig.update_layout(margin=dict(l=15 , r=15 , t=30 , b=5) ,title=f'Distribución Nº de Menciones {sum}' ,
@@ -579,14 +577,14 @@ def make_sunburts_tweet_figure(GRUPO_types, USER_types,start_date , end_date, wo
 
 @app.callback(Output("source_tweet", "figure"),
     [
-        Input("GRUPO_types" , "value") , Input("USER_types" , "value") , Input("date_picker_select" , 'start_date') ,
+        Input("USER_types" , "value") , Input("date_picker_select" , 'start_date') ,
         Input("date_picker_select" , 'end_date') ,
     ] , [State("wordcloud" , "relayoutData")]
     # [State("lock_selector", "value"), State("wordcloud", "relayoutData")],
 )
-def make_source_tweet_figure(GRUPO_types, USER_types,start_date , end_date, wordcloud):
-    df_stars = df_f
-    df_stars = df_stars.loc[(df['username'].isin(USER_types)) & (df_stars['created_at'] >= start_date) & (
+def make_source_tweet_figure(USER_types,start_date , end_date, wordcloud):
+    df_stars = df_g_source
+    df_stars = df_stars.loc[(df_stars['username'].isin(USER_types)) & (df_stars['created_at'] >= start_date) & (
                 df_stars['created_at'] < end_date) ,]
 
     df_stars = df_stars['source'].value_counts().rename_axis('unique_values').reset_index(name='counts').head(6).sort_values(by='counts' ,ascending=True)
@@ -646,15 +644,24 @@ def make_source_tweet_figure(GRUPO_types, USER_types,start_date , end_date, word
 
 @app.callback(Output("time_tweet", "figure"),
     [
-        Input("GRUPO_types" , "value") , Input("USER_types" , "value") , Input("date_picker_select" , 'start_date') ,
+        Input("USER_types" , "value") , Input("date_picker_select" , 'start_date') ,
         Input("date_picker_select" , 'end_date') ,
     ] , [State("wordcloud" , "relayoutData")]
     # [State("lock_selector", "value"), State("wordcloud", "relayoutData")],
 )
-def make_time_tweet_figure(GRUPO_types, USER_types,start_date , end_date, wordcloud):
-    df_stars = df_f
+def make_time_tweet_figure(USER_types,start_date , end_date, wordcloud):
+    start_date = pd.to_datetime(start_date)
+    end_date = pd.to_datetime(end_date )
+
+    dias = end_date - start_date
+
+    if dias < datetime.timedelta(days=31):
+        rest = datetime.timedelta(days=31) - dias
+        start_date = start_date - rest
+
+    df_stars = df_g_time
     # df_stars = df_stars.loc[df['username'].isin(USER_types)]
-    df_stars = df_stars.loc[(df['username'].isin(USER_types)) & (df_stars['created_at'] >= start_date) & (
+    df_stars = df_stars.loc[(df_stars['username'].isin(USER_types)) & (df_stars['created_at'] >= start_date) & (
             df_stars['created_at'] < end_date) ,]
     df_media_total = df_stars.groupby(pd.Grouper(key='created_at' , freq='W'))[['stars']].mean().reset_index()
     df_media_total['username'] = 'Media Operadoras'
@@ -675,7 +682,7 @@ def make_time_tweet_figure(GRUPO_types, USER_types,start_date , end_date, wordcl
                               },
                   color_discrete_map={'@vodafone_es': '#E64A19',
                                       '@Lowi_es':   '#FF7043',   #'#FFAB91'
-                                        '@vodafoneyu': '#FF7043',
+                                        #'@vodafoneyu': '#FF7043',
                                          '@movistar_es': '#2962FF',
                                          '@TuentiES' :'#82B1FF',
                                          '@o2es' : '#0D47A1',
@@ -686,11 +693,14 @@ def make_time_tweet_figure(GRUPO_types, USER_types,start_date , end_date, wordcl
                                          '@masmovil' : '#FFFF00',
                                          '@pepephone' : '#FFFF8D',
                                          '@yoigo' : '#FFF9C4',
-                                        'Media Operadoras':'#EFF3F5'}
+                                        'Media Operadoras':'#EFF3F5'},
+                  category_orders={'username': ['Media Operadoras','@vodafone_es' , '@Lowi_es', #'@vodafoneyu',
+                                                '@movistar_es','@o2es','@TuentiES' ,'@orange_es','@Amena',
+                                                '@simyo_es','@jazztel_es','@masmovil','@pepephone','@yoigo']}
                   )
     fig.update_traces(mode='lines+markers',line=dict( width=2))
 
-    fig.update_layout(margin=dict(l=10 , r=20 , t=30 , b=10) ,title='Evolución Sentimiento Medio Semanal' ,
+    fig.update_layout(margin=dict(l=10 , r=20 , t=30 , b=10) ,title='Evolución Sentimiento Medio Semanal',
                       xaxis=dict(title='',
                           #title='Porcentaje' ,#range=[0,100],
                           titlefont_size=16 ,
@@ -705,7 +715,7 @@ def make_time_tweet_figure(GRUPO_types, USER_types,start_date , end_date, wordcl
                           # gridcolor='black',
                           color='#C8CDD0' ,
                           showgrid=False , gridcolor='#8D8D8D' , showline=True , linecolor='#8D8D8D' , linewidth=0.2 ,
-                          zerolinecolor='#8D8D8D' ,
+                          zerolinecolor='#8D8D8D' ,title_text='Stars 1 - 5'
                       ) ,
 
                       legend=dict(
@@ -729,7 +739,99 @@ def make_time_tweet_figure(GRUPO_types, USER_types,start_date , end_date, wordcl
 
     return fig
 
+################    menciones_tweet graph
 
+@app.callback(Output("menciones_tweet", "figure"),
+    [
+         Input("USER_types" , "value") , Input("date_picker_select" , 'start_date') ,
+        Input("date_picker_select" , 'end_date') ,
+    ] , [State("wordcloud" , "relayoutData")]
+    # [State("lock_selector", "value"), State("wordcloud", "relayoutData")],
+)
+def make_menciones_tweet_figure(USER_types,start_date , end_date, wordcloud):
+    start_date = pd.to_datetime(start_date)
+    end_date = pd.to_datetime(end_date )
+
+    dias = end_date - start_date
+
+    if dias < datetime.timedelta(days=31):
+        rest = datetime.timedelta(days=31) - dias
+        start_date = start_date - rest
+
+    df_stars = df_g_menciones
+    # df_stars = df_stars.loc[df['username'].isin(USER_types)]
+    df_stars = df_stars.loc[(df_stars['username'].isin(USER_types)) & (df_stars['created_at'] >= start_date) & (
+            df_stars['created_at'] < end_date) ,]
+
+    df_stars['count'] = 1
+    df_stars = df_stars.groupby(['username' , pd.Grouper(key='created_at' , freq='W')])[['count']].sum().reset_index()
+
+    fig = go.Figure()
+
+
+    fig = px.line(df_stars , x='created_at' , y='count' , color='username' ,
+                  labels={'created_at': 'Fecha', 'count': 'Nº tweets'} ,
+                  hover_name='username',
+                  hover_data={'count': ':,' , 'username': False ,'created_at': '|Semana %V del año %Y' ,
+                              },
+                  color_discrete_map={'@vodafone_es': '#E64A19',
+                                      '@Lowi_es':   '#FF7043',   #'#FFAB91'
+                                        #'@vodafoneyu': '#FF7043',
+                                         '@movistar_es': '#2962FF',
+                                         '@TuentiES' :'#82B1FF',
+                                         '@o2es' : '#0D47A1',
+                                         '@orange_es': '#F57C00',
+                                         '@jazztel_es': '#FFE0B2',
+                                         '@Amena' : '#FF9800',
+                                         '@simyo_es': '#FFB74D',
+                                         '@masmovil' : '#FFFF00',
+                                         '@pepephone' : '#FFFF8D',
+                                         '@yoigo' : '#FFF9C4',
+                                        'Media Operadoras':'#EFF3F5'},
+                  category_orders={'username': ['Media Operadoras','@vodafone_es' , '@Lowi_es', #'@vodafoneyu',
+                                                '@movistar_es','@o2es','@TuentiES' ,'@orange_es','@Amena',
+                                                '@simyo_es','@jazztel_es','@masmovil','@pepephone','@yoigo']}
+                  )
+    fig.update_traces(mode='lines+markers',line=dict( width=2))
+
+    fig.update_layout(margin=dict(l=10 , r=20 , t=30 , b=10) ,title='Evolución Número de menciones Semanal',
+                      xaxis=dict(title='',
+                          #title='Porcentaje' ,#range=[0,100],
+                          titlefont_size=16 ,
+                          tickfont_size=12 , showticklabels=True ,
+                          color='#C8CDD0' , showline=True , gridcolor='#8D8D8D' , linewidth=0.2 , linecolor='#8D8D8D' ,
+                          zerolinecolor='#8D8D8D' ,showgrid=False ,
+                          # zeroline=False,
+                      ) ,
+                      yaxis=dict(
+                          titlefont_size=16 ,
+                          tickfont_size=14 , showticklabels=True ,
+                          # gridcolor='black',
+                          color='#C8CDD0' ,
+                          showgrid=False , gridcolor='#8D8D8D' , showline=True , linecolor='#8D8D8D' , linewidth=0.2 ,
+                          zerolinecolor='#8D8D8D' ,title_text='Número de Menciones'
+                      ) ,
+
+                      legend=dict(
+                          x=1 ,
+                          y=1 ,font_color='#C8CDD0',
+                          # bgcolor='rgba(255, 255, 255, 0)' ,
+                          bgcolor='#212E36',
+                          font_size=14, #bgcolor="#e5ecf6",
+                          bordercolor="#192229",borderwidth=2, title_text='',
+                      ) ,
+                      barmode='relative' ,
+                      bargap=0.20 ,  # gap between bars of adjacent location coordinates.
+                      # bargroupgap=0.1,  # gap between bars of the same location coordinate.
+                      autosize=True , showlegend=True , paper_bgcolor="#212E36" , title_font_color='#EFF3F5' ,
+                      plot_bgcolor="#212E36",
+                      hoverlabel=dict(
+
+                          font_size=16 ,
+                                 ),
+                      )
+
+    return fig
 
 
 

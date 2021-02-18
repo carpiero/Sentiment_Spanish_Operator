@@ -46,6 +46,8 @@ if __name__ == "__main__":
 
     df['Tweet_Content_Token'] = df['Tweet_Content'].apply(word_cloud.spacy_tokenizer)
 
+    # df= df[df['username']!='@vodafoneyu']
+
     df.to_parquet('./data/df.parquet')
     print('\n\nFinish\n\n')
 

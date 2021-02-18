@@ -3,8 +3,8 @@ import pandas as pd
 
 
 # df=pd.read_parquet('./data/df_total.parquet')
-df=pd.read_parquet('./data/df.parquet')
-# df = df.loc[df['username']!='@vodafoneyu']
+df= pd.read_parquet('./data/df.parquet')
+df= df.loc[df['username']!='@vodafoneyu']
 
 
 ########### controls
@@ -14,6 +14,9 @@ GRUPO_dict = dict(zip(GRUPO, GRUPO))
 
 USER=sorted(df['username'].unique().to_list())
 USER_dict = dict(zip(USER, USER))
+
+################# wordcloud
+df_word=df[['username','created_at','Tweet_Content_Token']]
 
 
 ############## stars graph
@@ -53,9 +56,15 @@ df_f.loc[df_f['username'] == '@pepephone' , 'color'] = '#FFFF8D'
 df_f.loc[df_f['username'] == '@yoigo' , 'color'] = '#FFF9C4'
 
 
+df_g_stars=df_f[['stars','username','created_at','orden','color']]
 
+df_g_sunburst=df_f[['stars','username','created_at','GRUPO']]
 
+df_g_source=df_f[['username','created_at','source']]
 
+df_g_time=df_f[['stars','username','created_at']]
+
+df_g_menciones=df_f[['username','created_at']]
 
 
 
