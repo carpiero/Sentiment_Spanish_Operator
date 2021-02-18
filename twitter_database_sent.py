@@ -277,7 +277,9 @@ def update_twitter_database():
     dias=df_postgresql[['created_at']].resample('D', on='created_at').count()
     print(f'\n\n{dias}')
 
-    print(f'\n\nFinish Update Day: {since}\n\n')
+    print(f'\n\nFinish Update Day: {since}\n\n{datetime.date.today()} - {datetime.datetime.now().strftime("%H:%M:%S")}\n\n')
+
+
 
 
 if __name__ == "__main__":
