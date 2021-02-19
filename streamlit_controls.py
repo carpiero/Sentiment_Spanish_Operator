@@ -15,9 +15,9 @@ if __name__ == "__main__":
     user = cfg['ssh']['username']
     passw = cfg['ssh']['password']
     # engine = create_engine(f'postgresql://{user}:{passw}@192.168.1.170/carpiero' )
-    # engine = create_engine(f'postgresql://{user}:{passw}@asuscar.duckdns.org/carpiero',echo=True)
+    engine = create_engine(f'postgresql://{user}:{passw}@asuscar.duckdns.org/carpiero',echo=True)
 
-    engine = create_engine(f'postgresql://{user}:{passw}@localhost/carpiero')
+    # engine = create_engine(f'postgresql://{user}:{passw}@localhost/carpiero')
     sqlite_connection = engine.connect()
 
     df_postgresql = pd.read_sql_query("SELECT * FROM twitter_operators_sent_02" , engine , coerce_float=True ,parse_dates=['created_at'])
@@ -71,6 +71,8 @@ if __name__ == "__main__":
     for p,i in enumerate(sorted_keys):
         if p < 7:
             print(f'{i} : {counts_nsw[i]}')
+
+    print(f'\n\nFinish Update Day: {since}\n\n{datetime.date.today()} - {datetime.datetime.now().strftime("%H:%M:%S")}\n\n')
 
 
 
