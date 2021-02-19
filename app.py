@@ -56,12 +56,12 @@ app.index_string = '''<!DOCTYPE html>
 <title>{%title%}</title>
 {%favicon%}
 {%css%}
-    <meta name="description" content="DataTown | CESEL Interactive Dashboard" />
-    <meta name="title" property="og:title" content="DataTown | CESEL Interactive Dashboard" />
-    <meta property="og:type" content="DataTown | CESEL Interactive Dashboard" />
-    <meta name="image" property="og:image" content="https://i.ibb.co/vQkQkYL/jorge-fernandez-salas-Ch-SZETOal-I-unsplash-asdasdasdasda.jpg" />
-    <meta name="description" property="og:description" content="DataTown | CESEL Interactive Dashboard" />
-    <meta name="author" content="DataTown | CESEL Interactive Dashboard" />
+    <meta name="description" content="Sentimiento Móvil | Sentiment Analysis (NLP) of Mobile Operators" />
+    <meta name="title" property="og:title" content="Sentimiento Móvil | Sentiment Analysis (NLP) of Mobile Operators" />
+    <meta property="og:type" content="Sentimiento Móvil | Sentiment Analysis (NLP) of Mobile Operators" />
+    <meta name="image" property="og:image" content="https://i.ibb.co/ZNr9vr7/brett-jordan-ul-Rl-Am1-ITMU-unsplash.jpg" />
+    <meta name="description" property="og:description" content="Sentimiento Móvil | Sentiment Analysis (NLP) of Mobile Operators" />
+    <meta name="author" content="Sentimiento Móvil | Sentiment Analysis (NLP) of Mobile Operators" />
 </head>
 <body>
 {%app_entry%}
