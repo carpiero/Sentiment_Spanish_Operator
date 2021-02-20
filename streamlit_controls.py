@@ -72,7 +72,7 @@ if __name__ == "__main__":
         if p < 7:
             print(f'{i} : {counts_nsw[i]}')
 
-    print(f'\n\nFinish Update Day: {since}\n\n{datetime.date.today()} - {datetime.datetime.now().strftime("%H:%M:%S")}\n\n')
+    print(f'\n\nFinish Update Day:\n\n{datetime.date.today()} - {datetime.datetime.now().strftime("%H:%M:%S")}\n\n')
 
 
 

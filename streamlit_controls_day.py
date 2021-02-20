@@ -75,7 +75,7 @@ if __name__ == "__main__":
     df_total.to_parquet('./data/df_total.parquet')
 
 
-    print(f'\n\nFinish Update Day: {since}\n\n{datetime.date.today()} - {datetime.datetime.now().strftime("%H:%M:%S")}\n\n')
+    print(f'\n\nFinish Update Day: \n\n{datetime.date.today()} - {datetime.datetime.now().strftime("%H:%M:%S")}\n\n')
 
 
 
