@@ -52,7 +52,7 @@ if __name__ == "__main__":
             print(i,':', counts_nsw[i])
 
     # df_yest=pd.read_parquet('./data/df.parquet')
-    df_yest=pd.read_parquet('./data/df_total.parquet')
+    df_yest=pd.read_parquet('/home/carpiero/ir/Sentiment_Spanish_Operator/data/df_total.parquet')
     print(df_yest)
     df_total = pd.concat([df_yest , df] , axis=0)
     print(df_total)
@@ -71,8 +71,8 @@ if __name__ == "__main__":
         df_total.loc[: , feature] = df_total[feature].astype(dtype)
 
     # df_total = df_total[df_total['username'] != '@vodafoneyu']
-    print('\n\nwrrite parquet')
-    df_total.to_parquet('./data/df_total.parquet')
+    print('\n\nwrite parquet')
+    df_total.to_parquet('/home/carpiero/ir/Sentiment_Spanish_Operator/data/df_total.parquet')
 
 
     print(f'\n\nFinish Update Day: \n\n{datetime.date.today()} - {datetime.datetime.now().strftime("%H:%M:%S")}\n\n')
