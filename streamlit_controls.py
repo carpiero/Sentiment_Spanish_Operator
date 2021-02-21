@@ -6,6 +6,7 @@ import psycopg2
 from wrangling import word_cloud
 import collections
 
+
 if __name__ == "__main__":
 ########## carga de database
 
