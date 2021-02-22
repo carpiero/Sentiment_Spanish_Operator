@@ -161,7 +161,7 @@ app.layout = html.Div(
                             src=app.get_asset_url("twitterlogo.png"),
                             id="plotly-image",
                             style={
-                                "height": "35px",
+                                "height": "55px",
                                 "width": "auto",
                                 'float': 'right','margin-top':'35px'
                             },
@@ -172,6 +172,9 @@ app.layout = html.Div(
                                 html.H5(
                                     "Operadoras Móviles", style={"margin-top": "0px"}
                                 ),
+                                html.H4(
+                                    "El modelo usado para analizar las menciones (bert-base-multilingual-uncased), esta diseñado para predecir el sentimiento como un número de Stars (entre 1 y 5). ", style={"margin-top": "0px"}
+                                ),html.Br(),
                         html.P(
                             "Grupo Móvil",
                             className="control_label",

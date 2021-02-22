@@ -233,11 +233,14 @@ h3 {
   padding-bottom: 0px;
 }
 h4 {
-  font-size: 2.6rem;
-  line-height: 1.35;
-  letter-spacing: -0.08rem;
-  margin-bottom: 1.2rem;
-  margin-top: 1.2rem;
+  font-size: 1.35rem;
+  line-height: 1.5;
+  letter-spacing: -0.05rem;
+  margin-bottom: 0.6rem;
+  margin-top: 0.6rem;
+    color:#C8CDD0;
+  padding: 10px;
+  padding-bottom: 0px;
 }
 h5 {
   font-size: 2.2rem;
@@ -256,6 +259,8 @@ h6 {
   margin-bottom: 0.75rem;
   margin-top: 0.50rem;
 }
+
+
 
 p {
  font-size: 2.0rem;
