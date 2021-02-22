@@ -526,6 +526,7 @@ def make_sunburts_tweet_figure(USER_types,start_date , end_date, wordcloud):
     df_stars['count'] = 1
 
     sum= df_stars['count'].sum()
+    sum = locale.format_string('%.0f' , sum , True)
     fig = px.sunburst(df_stars, path=['GRUPO' , 'username'] , values='count' , color='GRUPO',
                       color_discrete_map = {'Vodafone': '#E64A19' , 'Movistar': '#2962FF' , 'Masmovil': '#8E8E00' , 'Orange': '#A56B00'},
                       labels={'parent': 'Grupo Móvil','count': 'Nº de Menciones','labels': 'Operadora'},#hover_name='username',
