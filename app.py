@@ -247,7 +247,7 @@ app.layout = html.Div(
                         html.Div(
                             [dcc.Graph(id="stars_graph",config = {'displayModeBar': False})],
                             id="countGraphContainer",
-                            className="pretty_container",style={'min-height': '280px'},
+                            className="pretty_container",style={'min-width': '500px','min-height': '350px'},
                         ),
                     ],
                     id="right-column",
@@ -267,11 +267,11 @@ app.layout = html.Div(
                 ),
                 html.Div(
                     [dcc.Graph(id="sunburst_tweet",config = {'displayModeBar': False})],
-                    className="pretty_container four columns",
+                    className="pretty_container four columns",style={'min-width': '500px','min-height': '350px'},
                 ),
                 html.Div(
                     [dcc.Graph(id="source_tweet",config = {'displayModeBar': False})],
-                    className="pretty_container four columns",
+                    className="pretty_container four columns",style={'min-width': '500px','min-height': '350px'},
                 ),
             ],
             className="row flex-display",
@@ -280,7 +280,7 @@ app.layout = html.Div(
             [
                 html.Div(
                     [dcc.Graph(id="time_tweet",config = {'displayModeBar': False})],
-                    className="pretty_container twelve columns",#style={'min-height': '680px'},
+                    className="pretty_container twelve columns",style={'min-width': '500px','min-height': '350px'},
                 ),
         #         html.Div(
         #             [dcc.Graph(id="box_graph",config = {'displayModeBar': False})],
@@ -293,7 +293,7 @@ app.layout = html.Div(
             [
                 html.Div(
                     [dcc.Graph(id="menciones_tweet",config = {'displayModeBar': False})],
-                    className="pretty_container twelve columns",#style={'min-height': '680px'},
+                    className="pretty_container twelve columns",style={'min-width': '500px','min-height': '350px'},
                 ),
         #         html.Div(
         #             [dcc.Graph(id="box_graph",config = {'displayModeBar': False})],
