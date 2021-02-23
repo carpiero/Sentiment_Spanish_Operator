@@ -1,8 +1,10 @@
-pandas~=1.0.3
-numpy~=1.18.1
-streamlit==0.69.2
-plotly==4.8.2
-matplotlib==3.2.2
-spacy==2.3.2
-transformers==3.3.1
-tweepy==3.9.0
+- Python==3.7.3
+- Pandas==1.0.3
+- Dash==1.13.4
+- Numpy==1.18.1
+- Plotly==4.8.2
+- Gunicorn==20.0.4
+- Pyarrow==0.17.1
+- Spacy==2.3.2
+- Transformers==3.3.1
+- Tweepy==3.9.0

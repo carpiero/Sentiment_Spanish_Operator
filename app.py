@@ -270,11 +270,11 @@ app.layout = html.Div(
                 ),
                 html.Div(
                     [dcc.Graph(id="sunburst_tweet",config = {'displayModeBar': False})],
-                    className="pretty_container four columns",style={'min-width': '500px','min-height': '350px'},
+                    className="pretty_container four columns",style={'min-width': '500px','min-height': '250px'},
                 ),
                 html.Div(
                     [dcc.Graph(id="source_tweet",config = {'displayModeBar': False})],
-                    className="pretty_container four columns",style={'min-width': '500px','min-height': '350px'},
+                    className="pretty_container four columns",style={'min-width': '500px','min-height': '150px'},
                 ),
             ],
             className="row flex-display",
