@@ -33,3 +33,4 @@ if __name__ == "__main__":
     print(f'\n\nFinish Update Day: {yest}\n\n')
 
     print(df_sqlite[['created_at']].resample('D' , on='created_at').count())
+

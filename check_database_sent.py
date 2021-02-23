@@ -57,3 +57,5 @@ if __name__ == "__main__":
     df = df_postgresql.loc[(df_postgresql['created_at'] >= start_date) & (df_postgresql['created_at'] < end_date)]
 
     print(df['username'].value_counts())
+
+
