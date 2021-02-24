@@ -45,8 +45,8 @@ source venv/bin/activate
 Clone the git repo, then install the requirements with pip
 
 ```
-git clone https://github.com/carpiero/DataTown.git
-cd /DataTown
+git clone https://github.com/carpiero/Sentiment_Spanish_Operator.git
+cd /Sentiment_Spanish_Operator
 pip install -r requirements.txt
 ```
 
