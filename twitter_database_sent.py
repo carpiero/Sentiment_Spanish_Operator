@@ -252,10 +252,6 @@ def update_twitter_database():
     engine = create_engine(f'postgresql://{user}:{passw}@localhost/carpiero' , echo=True)
     postgresql_connection = engine.connect()
 
-    postgresql_table = "twitter_operators_sent"
-    tweets_df_total.to_sql(postgresql_table, postgresql_connection, if_exists='append',index=False,
-               # dtype={'tweet_id': sqlalchemy.types.VARCHAR(length=255),'user_id': sqlalchemy.types.VARCHAR(length=255)}
-                           )
 
     postgresql_table = "twitter_operators_sent_02"
     tweets_df_total.to_sql(postgresql_table, postgresql_connection, if_exists='append',index=False,
@@ -264,12 +260,6 @@ def update_twitter_database():
 
 
     # tweets_df_total.to_csv(f'./Row_data/tweets_df_total.csv')
-
-    print(f'\n\n table sent')
-
-    df_postgresql = pd.read_sql_query("SELECT * FROM twitter_operators_sent", engine, coerce_float=True, parse_dates=['created_at'])
-    dias=df_postgresql[['created_at']].resample('D', on='created_at').count()
-    print(f'\n\n{dias}')
 
     print(f'\n\n table sent 02')
 
