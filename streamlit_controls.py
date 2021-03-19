@@ -15,8 +15,8 @@ if __name__ == "__main__":
 
     user = cfg['ssh']['username']
     passw = cfg['ssh']['password']
-    # engine = create_engine(f'postgresql://{user}:{passw}@192.168.1.170/carpiero',echo=True )
-    engine = create_engine(f'postgresql://{user}:{passw}@asuscar.duckdns.org/carpiero',echo=True)
+    engine = create_engine(f'postgresql://{user}:{passw}@192.168.1.170/carpiero',echo=True )
+    # engine = create_engine(f'postgresql://{user}:{passw}@asuscar.duckdns.org/carpiero',echo=True)
 
     # engine = create_engine(f'postgresql://{user}:{passw}@localhost/carpiero',echo=True)
     sqlite_connection = engine.connect()
@@ -41,7 +41,7 @@ if __name__ == "__main__":
     df_postgresql['Day'] = pd.DatetimeIndex(df_postgresql['created_at']).day
 
     df = df_postgresql.loc[~df_postgresql['Tweet_Content'].str.contains(
-            'viernestopenmasmovil|redlovesgreen|sorteando|Estudiantes|cuspinera|s o r t e o|realmadrid|colorweek|taehyung|sorteo|concurso|concursazo|sorteazo|regalamos|cumplelowiconlg|laliga|concierto|cestavodafone|Movistar Liga de Campeones' ,
+            'viernestopenmasmovil|redlovesgreen|sorteamos|sorteando|Estudiantes|cuspinera|s o r t e o|realmadrid|colorweek|taehyung|sorteo|concurso|concursazo|sorteazo|regalamos|cumplelowiconlg|laliga|concierto|cestavodafone|Movistar Liga de Campeones' ,
             case=False)]
 
 
@@ -49,7 +49,7 @@ if __name__ == "__main__":
 
     # df= df[df['username']!='@vodafoneyu']
 
-    # df.to_parquet('/home/carpiero/ir/Sentiment_Spanish_Operator/data/df_total.parquet')
+    df.to_parquet('/home/carpiero/ir/Sentiment_Spanish_Operator/data/df_total.parquet')
     df.to_parquet('./data/df.parquet')
     print('\n\nFinish\n\n')
 

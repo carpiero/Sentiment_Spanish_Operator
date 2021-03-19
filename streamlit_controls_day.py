@@ -38,7 +38,7 @@ if __name__ == "__main__":
     df['Day'] = pd.DatetimeIndex(df['created_at']).day
 
     df = df.loc[~df['Tweet_Content'].str.contains(
-            'viernestopenmasmovil|redlovesgreen|Estudiantes|sorteando|cuspinera|s o r t e o|realmadrid|colorweek|taehyung|sorteo|concurso|concursazo|sorteazo|regalamos|cumplelowiconlg|laliga|concierto|cestavodafone|Movistar Liga de Campeones' ,
+            'viernestopenmasmovil|redlovesgreen|Estudiantes|sorteamos|sorteando|cuspinera|s o r t e o|realmadrid|colorweek|taehyung|sorteo|concurso|concursazo|sorteazo|regalamos|cumplelowiconlg|laliga|concierto|cestavodafone|Movistar Liga de Campeones' ,
             case=False)]
 
     df['Tweet_Content_Token'] = df['Tweet_Content'].apply(word_cloud.spacy_tokenizer)
