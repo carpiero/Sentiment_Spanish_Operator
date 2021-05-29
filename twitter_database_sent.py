@@ -39,7 +39,7 @@ def update_twitter_database():
 
     auth = tweepy.OAuthHandler(CONSUMER_KEY, CONSUMER_SECRET)
     auth.set_access_token(ACCESS_TOKEN, ACCESS_SECRET)
-    api = tweepy.API(auth,wait_on_rate_limit=True,wait_on_rate_limit_notify=True,retry_count=20,retry_delay=5)
+    api = tweepy.API(auth,wait_on_rate_limit=True,wait_on_rate_limit_notify=True,monitor_rate_limit=True,retry_count=5,retry_delay=5)
 
 
     CK2= cfg['token_twitter']['CONSUMER_KEY2']
@@ -54,7 +54,7 @@ def update_twitter_database():
 
     auth = tweepy.OAuthHandler(CONSUMER_KEY, CONSUMER_SECRET)
     auth.set_access_token(ACCESS_TOKEN, ACCESS_SECRET)
-    api2 = tweepy.API(auth,wait_on_rate_limit=True,wait_on_rate_limit_notify=True,retry_count=20,retry_delay=5)
+    api2 = tweepy.API(auth,wait_on_rate_limit=True,wait_on_rate_limit_notify=True,monitor_rate_limit=True,retry_count=5,retry_delay=5)
 
 
     CK3= cfg['token_twitter']['CONSUMER_KEY3']
@@ -69,7 +69,7 @@ def update_twitter_database():
 
     auth = tweepy.OAuthHandler(CONSUMER_KEY, CONSUMER_SECRET)
     auth.set_access_token(ACCESS_TOKEN, ACCESS_SECRET)
-    api3 = tweepy.API(auth,wait_on_rate_limit=True,wait_on_rate_limit_notify=True,retry_count=20,retry_delay=5)
+    api3 = tweepy.API(auth,wait_on_rate_limit=True,wait_on_rate_limit_notify=True,monitor_rate_limit=True,retry_count=5,retry_delay=5)
 
     # username = ['@vodafone_es','@orange_es','@Amena','@TuentiES','@jazztel_es',
     #             '@masmovil','@pepephone','@o2es','@simyo_es',
@@ -85,7 +85,7 @@ def update_twitter_database():
     #
     #                  }
 
-    count = 6000
+    count = 5000
 
     today = datetime.date.today()
     yest = today - datetime.timedelta(days=1)
