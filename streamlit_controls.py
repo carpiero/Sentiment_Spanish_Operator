@@ -12,13 +12,14 @@ if __name__ == "__main__":
 
     cfg = configparser.RawConfigParser()
     cfg.read('/home/carpiero/ir/pass_projects/pass.ini')
+    # cfg.read('/Users/carlospinero/ir/pass_projects/pass.ini')
 
     user = cfg['ssh']['username']
     passw = cfg['ssh']['password']
-    engine = create_engine(f'postgresql://{user}:{passw}@192.168.1.170/carpiero',echo=True )
+    #engine = create_engine(f'postgresql://{user}:{passw}@192.168.1.170/carpiero',echo=True )
     # engine = create_engine(f'postgresql://{user}:{passw}@asuscar.duckdns.org/carpiero',echo=True)
 
-    # engine = create_engine(f'postgresql://{user}:{passw}@localhost/carpiero',echo=True)
+    engine = create_engine(f'postgresql://{user}:{passw}@localhost/carpiero',echo=True)
     sqlite_connection = engine.connect()
 
     df_postgresql = pd.read_sql_query("SELECT * FROM twitter_operators_sent_02" , engine , coerce_float=True ,parse_dates=['created_at'])
@@ -50,7 +51,7 @@ if __name__ == "__main__":
     # df= df[df['username']!='@vodafoneyu']
 
     df.to_parquet('/home/carpiero/ir/Sentiment_Spanish_Operator/data/df_total.parquet')
-    df.to_parquet('./data/df.parquet')
+    #df.to_parquet('/Users/carlospinero/ir/Drafts/df_total.parquet')
     print('\n\nFinish\n\n')
 
     today = datetime.date.today()
