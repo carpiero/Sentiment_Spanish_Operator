@@ -19,8 +19,8 @@ This model is intended for direct use as a sentiment analysis model for product 
 ## :chart_with_upwards_trend: **URL** 
 
 
-### [Sentimiento Móvil](https://www.sentimienomovil.es/)  
-#### https://www.sentimienomovil.es
+### [Sentimiento Móvil](https://www.sentimientomovil.es/)  
+#### https://www.sentimientomovil.es
 
 
 ## :floppy_disk: **Data:**
