@@ -20,7 +20,7 @@ This model is intended for direct use as a sentiment analysis model for product 
 
 
 ### [Sentimiento Móvil](https://www.sentimientomovil.es/)  
-#### https://www.sentimientomovil.es
+#### https://www.sentimientomovil.es/
 
 
 ## :floppy_disk: **Data:**
